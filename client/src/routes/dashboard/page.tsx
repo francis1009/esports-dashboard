@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import {
   BarChart,
@@ -54,7 +52,7 @@ const ChartPlaceholder = ({
   );
 };
 
-export default function Dashboard() {
+const Dashboard: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
@@ -293,4 +291,6 @@ export default function Dashboard() {
       </div>
     </div>
   );
-}
+};
+
+export default Dashboard;

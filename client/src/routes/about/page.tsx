@@ -1,7 +1,7 @@
 import { Award, BookOpen, GraduationCap, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export default function About() {
+const About: React.FC = () => {
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-12 md:py-16">
@@ -206,4 +206,6 @@ export default function About() {
       </div>
     </div>
   );
-}
+};
+
+export default About;

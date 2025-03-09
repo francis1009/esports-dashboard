@@ -47,7 +47,7 @@ const ChartPlaceholder = ({
   );
 };
 
-export default function Analytics() {
+const Analytics: React.FC = () => {
   const [activeTab, setActiveTab] = useState("revenue");
 
   return (
@@ -274,3 +274,5 @@ export default function Analytics() {
     </div>
   );
 }
+
+export default Analytics;

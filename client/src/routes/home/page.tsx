@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
-export default function Home() {
+const Home: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -163,3 +163,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default Home;
