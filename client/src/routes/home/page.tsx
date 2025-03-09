@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
-export default function EsportsPage() {
+export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -24,48 +24,12 @@ export default function EsportsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-black text-white font-sans">
-      {/* Animated navbar */}
-      <header className="border-b border-gray-800/30 animate-fade-in">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="font-bold text-xl flex items-center gap-2">
-            <Trophy className="h-6 w-6 text-indigo-400" />
-            <span>EsportsInsight</span>
-          </div>
-          <nav className="hidden md:flex gap-6">
-            <a
-              href="#"
-              className="hover:text-indigo-300 transition-colors duration-200"
-            >
-              Tournaments
-            </a>
-            <a
-              href="#"
-              className="hover:text-indigo-300 transition-colors duration-200"
-            >
-              Analytics
-            </a>
-            <a
-              href="#"
-              className="hover:text-indigo-300 transition-colors duration-200"
-            >
-              About
-            </a>
-            <a
-              href="#"
-              className="hover:text-indigo-300 transition-colors duration-200"
-            >
-              Contact
-            </a>
-          </nav>
-        </div>
-      </header>
-
+    <div className="text-white">
       <div className="container mx-auto px-4 py-12 md:py-20">
         <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-16">
           {/* Animated left content section */}
           <div className="lg:w-1/2 space-y-6 animate-fade-in [animation-delay:200ms]">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl leading-tight">
               Dominate the <span className="text-indigo-400">Esports</span>{" "}
               Landscape
             </h1>
