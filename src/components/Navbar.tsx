@@ -39,7 +39,7 @@ export default function Navbar() {
             to="https://github.com/francis1009/esports-dashboard"
             className="hover:text-[#6366f1] transition-colors duration-200"
           >
-            <Github className="h-5 w-5"/>
+            <Github className="h-5 w-5" />
           </Link>
         </nav>
 
@@ -61,11 +61,11 @@ export default function Navbar() {
         <div className="md:hidden bg-[#131825] border-t border-gray-800/20 py-4 px-4">
           <nav className="flex flex-col space-y-4">
             <Link
-              to="/tournaments"
+              to="/dashboard"
               className="hover:text-[#6366f1] transition-colors duration-200 py-2"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Tournaments
+              Dashboard
             </Link>
             <Link
               to="/analytics"
@@ -82,11 +82,10 @@ export default function Navbar() {
               About
             </Link>
             <Link
-              to="/contact"
-              className="hover:text-[#6366f1] transition-colors duration-200 py-2"
-              onClick={() => setMobileMenuOpen(false)}
+              to="https://github.com/francis1009/esports-dashboard"
+              className="hover:text-[#6366f1] transition-colors duration-200"
             >
-              Contact
+              <Github className="h-5 w-5" />
             </Link>
           </nav>
         </div>

@@ -5,7 +5,6 @@ import {
   PieChart,
   TrendingUp,
   DollarSign,
-  Users,
   Trophy,
   Eye,
   ArrowRight,
@@ -53,7 +52,7 @@ const ChartPlaceholder = ({
 };
 
 const Dashboard: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex">
@@ -64,10 +63,6 @@ const Dashboard: React.FC = () => {
                    md:relative md:translate-x-0`}
       >
         <div className="flex items-center justify-between p-4 border-b border-gray-800/20">
-          <Link to="/" className="flex items-center gap-2 font-bold text-lg">
-            <Trophy className="h-5 w-5 text-[#6366f1]" />
-            <span>EsportsInsight</span>
-          </Link>
           <button
             onClick={() => setSidebarOpen(false)}
             className="text-gray-400 hover:text-white md:hidden"
@@ -134,26 +129,11 @@ const Dashboard: React.FC = () => {
               </Link>
             </nav>
           </div>
-
-          <div>
-            <h3 className="text-xs uppercase text-gray-500 font-medium mb-2">
-              Settings
-            </h3>
-            <nav className="space-y-1">
-              <Link
-                to="/dashboard/settings"
-                className="flex items-center gap-2 px-3 py-2 rounded-md text-gray-400 hover:bg-[#1c2133] hover:text-white"
-              >
-                <Users className="h-4 w-4" />
-                Account
-              </Link>
-            </nav>
-          </div>
         </div>
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-h-screen md:ml-64 md:pl-0 pl-0">
+      <div className="flex-1 flex flex-col min-h-screen md:pl-0 pl-0">
         {/* Top navigation */}
         <header className="bg-[#0a0d14] border-b border-gray-800/20 sticky top-0 z-40">
           <div className="flex items-center justify-between p-4">
