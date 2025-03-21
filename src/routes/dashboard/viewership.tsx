@@ -1,4 +1,10 @@
+import { useState } from "react";
+import GameFilter from "@/components/charts/game-filter";
+import PeakViewersChart from "@/components/charts/peak-viewers-chart";
+
 const Viewership: React.FC = () => {
+  const [topN, setTopN] = useState(5);
+
   return (
     <>
       {/* Dashboard content */}
@@ -14,10 +20,13 @@ const Viewership: React.FC = () => {
         {/* Filter */}
 
         {/* Main charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6"></div>
+        <div className="grid grid-cols-1 gap-6 mb-6">
+          <GameFilter value={topN} onChange={setTopN}></GameFilter>
+          <PeakViewersChart topNGames={topN} />
+        </div>
 
         {/* Secondary charts */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
       </main>
     </>
   );
