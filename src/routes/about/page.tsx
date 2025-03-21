@@ -98,42 +98,33 @@ const About: React.FC = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
+                name: "Francis Gabriel Manalo Valdez",
+                email: "francism56789@gmail.com",
+              },
+              {
                 name: "Daryl Teo Jun Wei",
-                id: "01421328",
                 email: "daryl.teo.2021@scis.smu.edu.sg",
               },
               {
-                name: "Francis Gabriel Manalo Valdez",
-                id: "01388777",
-                email: "fvaldez.2021@scis.smu.edu.sg",
-              },
-              {
                 name: "Kenneth Lim Hu Gui",
-                id: "01397812",
                 email: "kenneth.lim.2021@scis.smu.edu.sg",
               },
               {
                 name: "Toh Xin Hong Eugene",
-                id: "01395931",
                 email: "eugenetoh.2021@economics.smu.edu.sg",
               },
               {
                 name: "Zacchaeus Go Jie Ern",
-                id: "01399192",
                 email: "zacchaeusgo.2021@economics.smu.edu.sg",
               },
             ].map((member) => (
-              <div
-                key={member.id}
-                className="bg-[#131825] rounded-lg p-6 border border-gray-800/20 hover:border-[#6366f1]/30 transition-all duration-300"
-              >
+              <div className="bg-[#131825] rounded-lg p-6 border border-gray-800/20 hover:border-[#6366f1]/30 transition-all duration-300">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="bg-[#1c2133] p-2 rounded-full">
                     <GraduationCap className="h-5 w-5 text-[#6366f1]" />
                   </div>
                   <h3 className="font-medium text-white">{member.name}</h3>
                 </div>
-                <p className="text-sm text-gray-400 mb-1">ID: {member.id}</p>
                 <p className="text-sm text-gray-400 break-all">
                   {member.email}
                 </p>
@@ -150,15 +141,6 @@ const About: React.FC = () => {
           </h2>
           <div className="bg-[#131825] rounded-lg p-6 border border-gray-800/20">
             <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-xl font-medium mb-3">Python</h3>
-                <p className="text-gray-300 leading-relaxed mb-4">
-                  Python serves as the backbone for our backend data processing
-                  and integration, using libraries such as requests, Pandas, and
-                  NumPy for data operations. Flask creates lightweight RESTful
-                  endpoints for seamless frontend data requests.
-                </p>
-              </div>
               <div>
                 <h3 className="text-xl font-medium mb-3">React and D3.js</h3>
                 <p className="text-gray-300 leading-relaxed mb-4">
@@ -193,6 +175,14 @@ const About: React.FC = () => {
             </div>
           </div>
         </section>
+
+        {/* Data sources note */}
+        <div className="mt-12 bg-[#131825] rounded-lg p-4 border border-gray-800/20 text-sm text-gray-400 animate-fade-in [animation-delay:400ms]">
+          <p>
+            <strong>Data Sources:</strong> Esports Earnings, Twitch Tracker,
+            Statista, and other public datasets. Last updated: March 2025.
+          </p>
+        </div>
 
         {/* CTA */}
         <div className="mt-12 text-center animate-fade-in [animation-delay:600ms]">

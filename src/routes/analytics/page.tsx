@@ -262,17 +262,9 @@ const Analytics: React.FC = () => {
             </div>
           </div>
         )}
-
-        {/* Data sources note */}
-        <div className="mt-12 bg-[#131825] rounded-lg p-4 border border-gray-800/20 text-sm text-gray-400 animate-fade-in [animation-delay:400ms]">
-          <p>
-            <strong>Data Sources:</strong> Esports Earnings, Twitch Tracker,
-            Statista, and other public datasets. Last updated: March 2025.
-          </p>
-        </div>
       </div>
     </div>
   );
-}
+};
 
 export default Analytics;

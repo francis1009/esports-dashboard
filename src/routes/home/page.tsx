@@ -85,7 +85,7 @@ const Home: React.FC = () => {
                          transition-all duration-300 hover:shadow-lg hover:shadow-indigo-900/30"
               >
                 <Link to="/dashboard" className="px-3">
-                  Explore Analytics
+                  Explore Dashboard
                 </Link>
                 <ChevronRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
               </Button>
@@ -162,6 +162,6 @@ const Home: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Home;
