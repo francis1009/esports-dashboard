@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { ChartScatter } from "lucide-react";
 import * as d3 from "d3";
 
 interface EngagementData {
@@ -385,7 +386,10 @@ export default function EngagementLevelsChart({
   return (
     <div className="bg-[#131825] rounded-lg border border-gray-800/20 overflow-hidden col-span-1">
       <div className="p-4 border-b border-gray-800/20">
-        <h3 className="font-medium text-white">Engagement Levels</h3>
+        <div className="flex items-center gap-2 mb-1">
+          <ChartScatter className="h-5 w-5 text-[#6366f1]" />
+          <h3 className="font-medium text-white">Engagement Levels</h3>
+        </div>
       </div>
       <div className="bg-[#0c101a] p-4 flex items-center justify-center h-300px">
         <svg ref={chartRef} width="100%" height="100%" />

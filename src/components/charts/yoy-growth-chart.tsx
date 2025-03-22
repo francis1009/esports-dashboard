@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { ChartBar } from "lucide-react";
 import * as d3 from "d3";
 
 interface YoYGrowthData {
@@ -186,9 +187,12 @@ export default function YoYGrowthChart({
   return (
     <div className="bg-[#131825] rounded-lg border border-gray-800/20 overflow-hidden">
       <div className="p-4 border-b border-gray-800/20">
-        <h3 className="font-medium text-white">
-          Year-over-Year Growth in Peak Viewers
-        </h3>
+        <div className="flex items-center gap-2 mb-1">
+          <ChartBar className="h-5 w-5 text-[#6366f1]" />
+          <h3 className="font-medium text-white">
+            Year-over-Year Growth in Peak Viewers
+          </h3>
+        </div>
       </div>
       <div className="bg-[#0c101a] p-4 flex items-center justify-center h-300px">
         <svg ref={chartRef} width="100%" height="100%" />
