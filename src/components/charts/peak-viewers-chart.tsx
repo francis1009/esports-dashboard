@@ -211,7 +211,7 @@ export default function PeakViewersChart({
     // ------------------------------------------------------------------
 
     // A simple HTML tooltip (positioned absolutely)
-    let tooltip = d3.select(".peak-viewers-tooltip");
+    let tooltip = d3.select<HTMLDivElement, unknown>(".peak-viewers-tooltip");
     if (tooltip.empty()) {
       tooltip = d3
         .select("body")

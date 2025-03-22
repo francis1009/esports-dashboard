@@ -115,7 +115,7 @@ export default function EngagementLevelsChart({
     // --------------------------------------------------------
     // 6) Create a tooltip div (if not already present)
     // --------------------------------------------------------
-    let tooltip = d3.select(".engagement-tooltip");
+    let tooltip = d3.select<HTMLDivElement, unknown>(".engagement-tooltip");
     if (tooltip.empty()) {
       tooltip = d3
         .select("body")

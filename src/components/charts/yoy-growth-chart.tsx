@@ -118,7 +118,7 @@ export default function YoYGrowthChart({
       .attr("stroke", "#999");
 
     // 7) Create tooltip div (consistent with PeakViewersChart)
-    let tooltip = d3.select(".yoy-tooltip");
+    let tooltip = d3.select<HTMLDivElement, unknown>(".yoy-tooltip");
     if (tooltip.empty()) {
       tooltip = d3
         .select("body")
