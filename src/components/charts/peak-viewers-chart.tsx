@@ -1,8 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import * as d3 from "d3";
+
+interface PeakViewersData {
+  year: number;
+  game: string;
+  peakViewers: number;
+}
 
 interface PeakViewersChartProps {
   topNGames: number;
+  data: PeakViewersData[];
+  topGames?: string[]; // optional shared list from parent
 }
 
 interface DataRow {
@@ -10,20 +18,12 @@ interface DataRow {
   [key: string]: number;
 }
 
-export default function PeakViewersChart({ topNGames }: PeakViewersChartProps) {
+export default function PeakViewersChart({
+  topNGames,
+  data,
+  topGames: sharedTopGames,
+}: PeakViewersChartProps) {
   const chartRef = useRef<SVGSVGElement | null>(null);
-  const [data, setData] = useState<any[]>([]);
-
-  useEffect(() => {
-    d3.csv("/data/kaggle_Twitch_game_data.csv").then((rawData) => {
-      const parsed = rawData.map((d) => ({
-        year: +d.Year,
-        game: d.Game,
-        peakViewers: +d.Peak_viewers,
-      }));
-      setData(parsed);
-    });
-  }, []);
 
   useEffect(() => {
     if (!chartRef.current || data.length === 0) return;
@@ -45,13 +45,16 @@ export default function PeakViewersChart({ topNGames }: PeakViewersChartProps) {
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
     // ---- 1) Determine top N games and prepare stacked data ----
-    const totalByGame = d3.rollups(
+    // Compute totals by game based on peakViewers
+    const totals = d3.rollups(
       data,
       (v) => d3.sum(v, (d) => d.peakViewers),
       (d) => d.game
     );
-    totalByGame.sort((a, b) => d3.descending(a[1], b[1]));
-    const topGames = totalByGame.slice(0, topNGames).map((d) => d[0]);
+    totals.sort((a, b) => d3.descending(a[1], b[1]));
+    // Use the sharedTopGames if provided, otherwise compute from totals.
+    const computedTopGames = totals.slice(0, topNGames).map((d) => d[0]);
+    const topGames = sharedTopGames ? sharedTopGames : computedTopGames;
 
     const dataByYear = d3.rollups(
       data,
@@ -63,6 +66,7 @@ export default function PeakViewersChart({ topNGames }: PeakViewersChartProps) {
         );
         const yearObj: Record<string, number> = {};
         sums.forEach(([gameName, total]) => {
+          // If game is in topGames, include it; else group into "Others"
           if (topGames.includes(gameName)) {
             yearObj[gameName] = total;
           } else {
@@ -76,7 +80,7 @@ export default function PeakViewersChart({ topNGames }: PeakViewersChartProps) {
 
     dataByYear.sort((a, b) => d3.ascending(a[0], b[0]));
 
-    // Build the list of keys for the stack generator
+    // Build keys for stack generator – show "Others" if present
     let allKeys = [...topGames];
     const hasOthers = dataByYear.some(([_, obj]) => "Others" in obj);
     if (hasOthers) {
@@ -93,7 +97,7 @@ export default function PeakViewersChart({ topNGames }: PeakViewersChartProps) {
       return row;
     });
 
-    // Create the stack generator with proper type
+    // Create the stack generator
     const stackGenerator = d3
       .stack<DataRow>()
       .keys(allKeys)
@@ -130,7 +134,6 @@ export default function PeakViewersChart({ topNGames }: PeakViewersChartProps) {
       Others: "#d9d9d9",
     };
 
-    // Updated area generator using the correct type and accessor for x position.
     const areaGenerator = d3
       .area<d3.SeriesPoint<DataRow>>()
       .x((d) => xScale(d.data.year))
@@ -179,7 +182,7 @@ export default function PeakViewersChart({ topNGames }: PeakViewersChartProps) {
       .text("Peak Viewers")
       .style("fill", "#fff");
 
-    // ---- 5) (Optional) Draw legend ----
+    // ---- 5) (Optional) Draw legend (color legend) ----
     const legend = svg
       .selectAll(".legend")
       .data(allKeys)
@@ -208,18 +211,23 @@ export default function PeakViewersChart({ topNGames }: PeakViewersChartProps) {
     // ------------------------------------------------------------------
 
     // A simple HTML tooltip (positioned absolutely)
-    const tooltip = d3
-      .select("body")
-      .append("div")
-      .attr("class", "peak-viewers-tooltip")
-      .style("position", "absolute")
-      .style("padding", "6px 8px")
-      .style("background", "#333")
-      .style("color", "#fff")
-      .style("border-radius", "4px")
-      .style("font-size", "12px")
-      .style("pointer-events", "none")
-      .style("opacity", 0);
+    let tooltip = d3.select(".peak-viewers-tooltip");
+    if (tooltip.empty()) {
+      tooltip = d3
+        .select("body")
+        .append("div")
+        .attr("class", "peak-viewers-tooltip")
+        .style("position", "absolute")
+        .style("left", "-9999px")
+        .style("top", "-9999px")
+        .style("padding", "6px 8px")
+        .style("background", "#333")
+        .style("color", "#fff")
+        .style("border-radius", "4px")
+        .style("font-size", "12px")
+        .style("pointer-events", "none")
+        .style("opacity", 0);
+    }
 
     // Two circles: top and bottom for the hovered area
     const dotTop = svg
@@ -306,10 +314,13 @@ export default function PeakViewersChart({ topNGames }: PeakViewersChartProps) {
         dotBottom.style("opacity", 0);
         tooltip.style("opacity", 0);
       });
-  }, [data, topNGames]);
+    return () => {
+      tooltip.remove();
+    };
+  }, [data, topNGames, sharedTopGames]);
 
   return (
-    <div className="bg-[#131825] rounded-lg border border-gray-800/20 overflow-hidden col-span-2">
+    <div className="bg-[#131825] rounded-lg border border-gray-800/20 overflow-hidden col-span-1">
       <div className="p-4 border-b border-gray-800/20">
         <h3 className="font-medium text-white">
           Top {topNGames} Games By Peak Viewers

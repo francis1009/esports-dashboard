@@ -1,14 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { Sidebar } from "../../components/Sidebar";
 import Overview from "./overview";
 import Viewership from "./viewership";
+import * as d3 from "d3";
 
 const Dashboard: React.FC = () => {
   const [activeSection, setActiveSection] = useLocalStorage(
     "activeSection",
     "overview"
   );
+  const [csvData, setCsvData] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Load CSV data once when the Dashboard mounts
+    d3.csv("/data/kaggle_Twitch_game_data.csv").then((rawData) => {
+      const parsed = rawData.map((d) => ({
+        year: +d.Year,
+        game: d.Game,
+        peakViewers: +d.Peak_viewers,
+        hoursStreamed: +d.Hours_streamed,
+        hoursWatched: +d.Hours_watched,
+        avgViewers: +d.Avg_viewers,
+      }));
+      setCsvData(parsed);
+    });
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -23,7 +40,7 @@ const Dashboard: React.FC = () => {
       case "revenue":
         return <Overview />;
       case "viewership":
-        return <Viewership />;
+        return <Viewership csvData={csvData} />;
       case "tournament":
         return <Overview />;
       default:
@@ -48,7 +65,7 @@ const Dashboard: React.FC = () => {
         <div className="block md:hidden space-y-8">
           <Overview />
           {/* <Revenue /> */}
-          <Viewership />
+          <Viewership csvData={csvData} />
           {/* <Tournament /> */}
         </div>
       </div>
