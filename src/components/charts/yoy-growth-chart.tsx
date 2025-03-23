@@ -37,9 +37,6 @@ export default function YoYGrowthChart({
     const filtered = data.filter((d) => topGames.includes(d.game));
 
     // 2) Group by game, sort by year ascending, and compute average YoY growth for each game.
-    // For each game, for every consecutive pair, compute:
-    //   (current.peakViewers - previous.peakViewers) / previous.peakViewers,
-    // then average these values.
     const yoyArray: { game: string; yoy: number }[] = [];
     const grouped = d3.rollups(
       filtered,
@@ -81,17 +78,30 @@ export default function YoYGrowthChart({
     const width = chartRef.current.clientWidth - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
-    // Clear previous chart content
-    const root = d3.select(chartRef.current);
-    root.selectAll("*").remove();
+    // Create or select persistent SVG container groups
+    let svg = d3.select(chartRef.current).select("g.chart-content");
+    if (svg.empty()) {
+      svg = d3
+        .select(chartRef.current)
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("class", "chart-content")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const svg = root
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+      // Create persistent groups for axes, bars, and zero line
+      svg.append("g").attr("class", "x-axis");
+      svg.append("g").attr("class", "y-axis");
+      svg.append("g").attr("class", "bars-group");
+      svg.append("line").attr("class", "zero-line");
+    } else {
+      // Update svg dimensions if necessary
+      d3.select(chartRef.current)
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom);
+    }
 
-    // 4) X scale (decimal yoy)
+    // 4) Scales
     const minYoy = d3.min(yoyArray, (d) => d.yoy) ?? 0;
     const maxYoy = d3.max(yoyArray, (d) => d.yoy) ?? 0;
     const xScale = d3
@@ -100,7 +110,7 @@ export default function YoYGrowthChart({
       .range([0, width])
       .nice();
 
-    // 5) Y scale (band for each game)
+    // Sort the array and create a y-scale based on game names.
     yoyArray.sort((a, b) => d3.ascending(a.game, b.game));
     const yScale = d3
       .scaleBand<string>()
@@ -108,17 +118,41 @@ export default function YoYGrowthChart({
       .range([0, height])
       .padding(0.2);
 
-    // 6) Draw vertical zero line
     const zeroX = xScale(0);
+
+    // 5) Update zero line (vertical line at x = 0)
     svg
-      .append("line")
+      .select<SVGLineElement>(".zero-line")
+      .transition()
+      .duration(750)
       .attr("x1", zeroX)
       .attr("x2", zeroX)
       .attr("y1", 0)
       .attr("y2", height)
       .attr("stroke", "#999");
 
-    // 7) Create tooltip div (consistent with PeakViewersChart)
+    // 6) Update axes
+    const xAxisCall = d3.axisBottom(xScale).tickFormat(d3.format(".2f"));
+    svg
+      .select("g.x-axis")
+      .attr("transform", `translate(0, ${height})`)
+      .transition()
+      .duration(750)
+      .call(xAxisCall);
+
+    const yAxisCall = d3
+      .axisLeft(yScale)
+      .tickSize(0)
+      .tickFormat((d: string) => truncateLabel(d, 25));
+    svg
+      .select("g.y-axis")
+      .transition()
+      .duration(750)
+      .call(yAxisCall)
+      .selectAll("text")
+      .style("fill", "#fff");
+
+    // 7) Create/update tooltip (only once)
     let tooltip = d3.select<HTMLDivElement, unknown>(".yoy-tooltip");
     if (tooltip.empty()) {
       tooltip = d3
@@ -137,31 +171,39 @@ export default function YoYGrowthChart({
         .style("opacity", 0);
     }
 
-    // 8) Draw bars with tooltip and glow effect on hover
-    svg
-      .selectAll(".bar")
-      .data(yoyArray)
-      .join("rect")
+    // 8) Update bars with transitions (only updating the changed bars)
+    const barsGroup = svg.select("g.bars-group");
+    const barSelection = barsGroup
+      .selectAll<SVGRectElement, { game: string; yoy: number }>(".bar")
+      .data(yoyArray, (d) => d.game);
+
+    // --- ENTER: new bars animate in from zero width ---
+    const barEnter = barSelection
+      .enter()
+      .append("rect")
       .attr("class", "bar")
       .attr("y", (d) => yScale(d.game)!)
       .attr("height", yScale.bandwidth())
-      .attr("x", (d) => (d.yoy < 0 ? xScale(d.yoy) : zeroX))
-      .attr("width", (d) => Math.abs(xScale(d.yoy) - zeroX))
-      .attr("fill", "#3399ff")
+      .attr("x", zeroX)
+      .attr("width", 0)
+      .attr("fill", "#3399ff");
+
+    // --- UPDATE: merge and transition bars to new positions/sizes ---
+    const barUpdate = barEnter.merge(barSelection);
+
+    barUpdate
       .on("mouseover", function (event, d) {
         d3.select(this).transition().duration(100).attr("fill", "#66bbff");
         tooltip
           .style("opacity", 1)
           .html(
-            `
-            <div><strong>${d.game}</strong></div>
-            <div>YoY Growth: ${d3.format(".2f")(d.yoy)}</div>
-          `
+            `<div><strong>${d.game}</strong></div>
+             <div>Average YoY Growth: ${d3.format(".2f")(d.yoy)}</div>`
           )
           .style("left", event.pageX + 12 + "px")
           .style("top", event.pageY + "px");
       })
-      .on("mousemove", (event) => {
+      .on("mousemove", function (event) {
         tooltip
           .style("left", event.pageX + 12 + "px")
           .style("top", event.pageY + "px");
@@ -169,19 +211,22 @@ export default function YoYGrowthChart({
       .on("mouseout", function () {
         d3.select(this).transition().duration(100).attr("fill", "#3399ff");
         tooltip.style("opacity", 0);
-      });
+      })
+      .transition()
+      .duration(750)
+      .attr("y", (d) => yScale(d.game)!)
+      .attr("height", yScale.bandwidth())
+      .attr("x", (d) => (d.yoy < 0 ? xScale(d.yoy) : zeroX))
+      .attr("width", (d) => Math.abs(xScale(d.yoy) - zeroX));
 
-    // 10) Draw X Axis (decimal format)
-    const xAxis = d3.axisBottom<number>(xScale).tickFormat(d3.format(".2f"));
-    svg.append("g").attr("transform", `translate(0, ${height})`).call(xAxis);
-
-    // 11) Draw Y Axis with truncated game labels
-    const yAxisCall = d3
-      .axisLeft(yScale)
-      .tickSize(0)
-      .tickFormat((d: string) => truncateLabel(d, 25));
-
-    svg.append("g").call(yAxisCall).selectAll("text").style("fill", "#fff");
+    // --- EXIT: bars leaving shrink and then get removed
+    barSelection
+      .exit()
+      .transition()
+      .duration(750)
+      .attr("width", 0)
+      .attr("x", zeroX)
+      .remove();
   }, [data, topNGames, topGames]);
 
   return (
@@ -190,7 +235,7 @@ export default function YoYGrowthChart({
         <div className="flex items-center gap-2 mb-1">
           <ChartBar className="h-5 w-5 text-[#6366f1]" />
           <h3 className="font-medium text-white">
-            Year-over-Year Growth in Peak Viewers
+            Average Year-over-Year Growth in Peak Viewers
           </h3>
         </div>
       </div>
