@@ -236,7 +236,7 @@ export default function PeakViewersChart({
       .exit()
       .transition()
       .duration(750)
-      .attr("d", (d) => areaGeneratorZero(d))
+      .attr("d", (d) => areaGeneratorZero(d as d3.SeriesPoint<DataRow>[]))
       .remove();
 
     // 8) Legend with transitions (enter/update/exit)
@@ -329,7 +329,7 @@ export default function PeakViewersChart({
         .style("opacity", 0);
     }
 
-    let overlayRect = svg.select<SVGRectElement>("rect.overlay-rect");
+    const overlayRect = svg.select<SVGRectElement>("rect.overlay-rect");
     overlayRect
       .attr("width", width)
       .attr("height", height)
@@ -362,8 +362,8 @@ export default function PeakViewersChart({
           return;
         }
 
-        const gameName = hoveredLayer.key;
-        const [val0, val1] = hoveredLayer[i];
+        const gameName = (hoveredLayer as d3.Series<DataRow, string>).key;
+        const [val0, val1] = (hoveredLayer as d3.Series<DataRow, string>)[i];
         const sliceValue = val1 - val0;
 
         dotTop

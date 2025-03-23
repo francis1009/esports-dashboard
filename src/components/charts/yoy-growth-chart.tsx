@@ -79,7 +79,9 @@ export default function YoYGrowthChart({
     const height = 400 - margin.top - margin.bottom;
 
     // Create or select persistent SVG container groups
-    let svg = d3.select(chartRef.current).select("g.chart-content");
+    let svg = d3
+      .select(chartRef.current)
+      .select("g.chart-content") as d3.Selection<any, unknown, null, undefined>;
     if (svg.empty()) {
       svg = d3
         .select(chartRef.current)
@@ -138,7 +140,7 @@ export default function YoYGrowthChart({
       .attr("transform", `translate(0, ${height})`)
       .transition()
       .duration(750)
-      .call(xAxisCall);
+      .call(xAxisCall as any);
 
     const yAxisCall = d3
       .axisLeft(yScale)
@@ -148,7 +150,7 @@ export default function YoYGrowthChart({
       .select("g.y-axis")
       .transition()
       .duration(750)
-      .call(yAxisCall)
+      .call(yAxisCall as any)
       .selectAll("text")
       .style("fill", "#fff");
 
