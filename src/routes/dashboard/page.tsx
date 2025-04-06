@@ -3,6 +3,7 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { Sidebar } from "../../components/Sidebar";
 import Overview from "./overview";
 import Viewership from "./viewership";
+import PrizePool from "./prizePool";
 import * as d3 from "d3";
 
 const Dashboard: React.FC = () => {
@@ -10,11 +11,16 @@ const Dashboard: React.FC = () => {
     "activeSection",
     "overview"
   );
-  const [csvData, setCsvData] = useState<any[]>([]);
+  const [viewershipData, setViewershipData] = useState<any[]>([]);
+  const [generalEsportsData, setGeneralEsportsData] = useState<any[]>([]);
+  const [historicalEsportsData, setHistoricalEsportsData] = useState<any[]>([]);
+  // const [globalRevenueData, setGlobalRevenueData] = useState<any[]>([]);
+  // const [revenueData, setRevenueData] = useState<any[]>([]);
+  // const [revenueChangeData, setRevenueChangeData] = useState<any[]>([]);
 
   useEffect(() => {
     // Load CSV data once when the Dashboard mounts
-    d3.csv("/data/kaggle_Twitch_game_data.csv").then((rawData) => {
+    d3.csv("/data/TwitchGameData.csv").then((rawData) => {
       const parsed = rawData.map((d) => ({
         year: +d.Year,
         game: d.Game,
@@ -23,7 +29,26 @@ const Dashboard: React.FC = () => {
         hoursWatched: +d.Hours_watched,
         avgViewers: +d.Avg_viewers,
       }));
-      setCsvData(parsed);
+      setViewershipData(parsed);
+    });
+
+    d3.csv("/data/GeneralEsportData.csv").then((rawData) => {
+      const parsed = rawData.map((d) => ({
+        game: d.Game,
+        genre: d.Genre,
+        totalEarnings: +d.Total_Earnings,
+        totalTournaments: +d.Total_Tournaments,
+      }));
+      setGeneralEsportsData(parsed);
+    });
+
+    d3.csv("/data/HistoricalEsportData.csv").then((rawData) => {
+      const parsed = rawData.map((d) => ({
+        date: +d.Date,
+        game: d.Game,
+        earnings: +d.Earnings,
+      }));
+      setHistoricalEsportsData(parsed);
     });
   }, []);
 
@@ -40,9 +65,15 @@ const Dashboard: React.FC = () => {
       case "revenue":
         return <Overview />;
       case "viewership":
-        return <Viewership csvData={csvData} />;
-      case "tournament":
-        return <Overview />;
+        return <Viewership gameData={viewershipData} />;
+      case "prizePool":
+        return (
+          <PrizePool
+            viewershipData={viewershipData}
+            generalEsportsData={generalEsportsData}
+            historicalEsportsData={historicalEsportsData}
+          />
+        );
       default:
         return <Overview />;
     }
@@ -65,8 +96,12 @@ const Dashboard: React.FC = () => {
         <div className="block md:hidden space-y-8">
           <Overview />
           {/* <Revenue /> */}
-          <Viewership csvData={csvData} />
-          {/* <Tournament /> */}
+          <Viewership gameData={viewershipData} />
+          <PrizePool
+            viewershipData={viewershipData}
+            generalEsportsData={generalEsportsData}
+            historicalEsportsData={historicalEsportsData}
+          />
         </div>
       </div>
     </div>

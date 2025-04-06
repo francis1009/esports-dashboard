@@ -66,7 +66,6 @@ export default function YoYGrowthChart({
       }
     });
 
-    console.log("Computed YoY array:", yoyArray);
     if (yoyArray.length === 0) {
       console.warn("YoYGrowthChart: yoyArray is empty, no bars to show.");
       d3.select(chartRef.current).selectAll("*").remove();

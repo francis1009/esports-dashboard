@@ -14,22 +14,22 @@ interface ViewershipData {
   avgViewers: number;
 }
 interface ViewershipProps {
-  csvData: ViewershipData[];
+  gameData: ViewershipData[];
 }
 
-const Viewership: React.FC<ViewershipProps> = ({ csvData }) => {
+const Viewership: React.FC<ViewershipProps> = ({ gameData }) => {
   const [topN, setTopN] = useState(5);
 
   // Compute shared topGames based on sum of peakViewers
   const topGames = useMemo(() => {
     const totals = d3.rollups(
-      csvData,
+      gameData,
       (v) => d3.sum(v, (d) => d.peakViewers),
       (d) => d.game
     );
     totals.sort((a, b) => d3.descending(a[1], b[1]));
     return totals.slice(0, topN).map(([game]) => game);
-  }, [csvData, topN]);
+  }, [gameData, topN]);
 
   return (
     <>
@@ -46,7 +46,7 @@ const Viewership: React.FC<ViewershipProps> = ({ csvData }) => {
           <GameFilter value={topN} onChange={setTopN} />
           <PeakViewersChart
             topNGames={topN}
-            data={csvData}
+            data={gameData}
             topGames={topGames}
           />
         </div>
@@ -54,10 +54,14 @@ const Viewership: React.FC<ViewershipProps> = ({ csvData }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <EngagementLevelsChart
             topNGames={topN}
-            data={csvData}
+            data={gameData}
             topGames={topGames}
           />
-          <YoYGrowthChart topNGames={topN} data={csvData} topGames={topGames} />
+          <YoYGrowthChart
+            topNGames={topN}
+            data={gameData}
+            topGames={topGames}
+          />
         </div>
       </main>
     </>

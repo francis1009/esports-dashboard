@@ -10,7 +10,7 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
     { id: "overview", label: "Overview", icon: BarChart2 },
     { id: "revenue", label: "Revenue Analysis", icon: DollarSign },
     { id: "viewership", label: "Viewership Trends", icon: Eye },
-    { id: "tournament", label: "Tournament Data", icon: Trophy },
+    { id: "prizePool", label: "Prize Pool Distribution", icon: Trophy },
   ];
 
   return (
