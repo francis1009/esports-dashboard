@@ -317,7 +317,7 @@ export default function ViewershipVsEarningsChart({
           )
           .style("left", event.pageX + 15 + "px")
           .style("top", event.pageY - 28 + "px")
-          .style("opacity", 1);
+          .style("opacity", 0.9);
 
         // Update and raise dot markers.
         g.select(".dot-hours")
@@ -343,8 +343,8 @@ export default function ViewershipVsEarningsChart({
     // 14) Add (or update) a legend in the bottom right.
     svg.selectAll(".legend").remove();
     const legendData = [
-      { label: "Avg Hours Watched", color: "#1f77b4" },
-      { label: "Avg Total Earnings", color: "#ff7f0e" },
+      { label: "Avg. Hours Watched", color: "#1f77b4" },
+      { label: "Avg. Total Earnings", color: "#ff7f0e" },
     ];
     const legend = svg
       .append("g")

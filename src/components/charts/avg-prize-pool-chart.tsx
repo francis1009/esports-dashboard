@@ -202,7 +202,7 @@ export default function AvgPrizePoolChart({
       .on("mouseover", function (event, d) {
         d3.select(this).transition().duration(100).attr("opacity", 0.8);
         tooltip
-          .style("opacity", 1)
+          .style("opacity", 0.9)
           .html(
             `<div><strong>${d[0]}</strong></div>
              <div>Avg Prize Pool: $${d3.format(",.0f")(d[1].avgPrizePool)}</div>

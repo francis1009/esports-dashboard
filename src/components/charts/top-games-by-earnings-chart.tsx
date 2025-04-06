@@ -218,7 +218,7 @@ export default function TopGamesByEarningsChart({
       .on("mouseover", function (event, d) {
         d3.select(this).transition().duration(100).attr("opacity", 0.8);
         tooltip
-          .style("opacity", 1)
+          .style("opacity", 0.9)
           .html(
             `<div><strong>${d.game}</strong></div>
              <div>Genre: ${d.genre}</div>
