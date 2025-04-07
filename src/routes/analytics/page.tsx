@@ -2,7 +2,6 @@
 import { useState } from "react";
 import {
   BarChart,
-  LineChart,
   TrendingUp,
   DollarSign,
   Trophy,
