@@ -121,6 +121,7 @@ export default function PercentageChangeTable({
       .attr("stroke", "#fff")
       // Add tooltip events for each cell.
       .on("mouseover", function (_, d) {
+        d3.select(this).attr("stroke", "#000");
         tooltip
           .html(
             `<strong>${d.market}</strong><br/>Year: ${
@@ -135,6 +136,7 @@ export default function PercentageChangeTable({
           .style("top", event.pageY + 12 + "px");
       })
       .on("mouseout", function () {
+        d3.select(this).attr("stroke", "#fff");
         tooltip.style("opacity", "0");
       });
 

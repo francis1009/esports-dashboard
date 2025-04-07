@@ -112,14 +112,17 @@ export default function GlobalRevenueDistributionChart({
               return revenue ? colorScale(revenue) : "#ccc";
             })
             .attr("stroke", "#333")
-            .attr("stroke-width", 0.5)
+            .attr("stroke-width", 0.1)
             // Offset the map copies horizontally based on the computed mapWidth.
             .attr("transform", `translate(${offset * mapWidth}, 0)`)
             .on("mouseover", function (_, d: any) {
               const countryName = d.properties.name;
               const revenue = revenueByCountry.get(countryName) || 0;
               if (!revenue) return; // Do not show tooltip if there's no revenue.
-              d3.select(this).attr("stroke-width", 1.5);
+              d3.select(this)
+                .attr("stroke-width", 0.5)
+                .attr("stroke", "#FF0000")
+                .raise();
               tooltip
                 .html(
                   `<strong>${countryName}</strong><br/>Revenue: $${d3.format(
@@ -137,7 +140,7 @@ export default function GlobalRevenueDistributionChart({
                 .style("top", event.pageY + "px");
             })
             .on("mouseout", function () {
-              d3.select(this).attr("stroke-width", 0.5);
+              d3.select(this).attr("stroke-width", 0.1).attr("stroke", "#333");
               tooltip.style("opacity", "0");
             });
         });
