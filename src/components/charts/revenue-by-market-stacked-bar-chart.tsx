@@ -101,7 +101,7 @@ export default function RevenueByMarketStackedBarChart({
     dataByYear.sort((a, b) => a.year - b.year);
 
     // Get unique markets sorted alphabetically.
-    let markets = Array.from(new Set(revenueByMarketData.map((d) => d.market)));
+    const markets = Array.from(new Set(revenueByMarketData.map((d) => d.market)));
     markets.sort((a, b) => a.localeCompare(b));
     // For vertical stacking with the alphabetical order from top to bottom,
     // we reverse the stacking order (since the first series is drawn at the bottom).
@@ -199,14 +199,18 @@ export default function RevenueByMarketStackedBarChart({
       .attr("y", (d) => yScale(d[1]))
       .attr("width", xScale.bandwidth())
       .attr("height", (d) => yScale(d[0]) - yScale(d[1]))
-      .on("mouseover", function (event, d) {
+      .on("mouseover", function (_, d) {
+        d3.select(this).attr("opacity", 0.7);
         // Retrieve the market key from the parent group.
-        const market = d3.select(this.parentNode).datum().key;
+        const market = d3.select(this.parentNode as Element).datum() as {
+          key: string;
+        };
+        const marketKey = market.key;
         const revenueSegment = d[1] - d[0];
         const pctChange = d.data[`${market}-pct`];
         tooltip
           .html(
-            `<strong>${market}</strong><br/>
+            `<strong>${marketKey}</strong><br/>
              Type: ${d.data.yearType}<br/>
              Year: ${d.data.year}<br/>
              Revenue: ${d3.format(",.0f")(revenueSegment)}<br/>
@@ -220,6 +224,7 @@ export default function RevenueByMarketStackedBarChart({
           .style("top", event.pageY + 12 + "px");
       })
       .on("mouseout", function () {
+        d3.select(this).attr("opacity", 1);
         tooltip.style("opacity", "0");
       });
 

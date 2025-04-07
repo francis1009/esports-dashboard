@@ -28,7 +28,7 @@ export default function PercentageChangeTable({
     svg.selectAll("*").remove();
 
     // Create (or reselect) a tooltip for cell hover info.
-    let tooltip = d3.select("body").select(".cell-tooltip");
+    let tooltip = d3.select("body").select(".cell-tooltip") as any;
     if (tooltip.empty()) {
       tooltip = d3
         .select("body")
@@ -75,7 +75,7 @@ export default function PercentageChangeTable({
     const colorScale = d3
       .scaleDiverging<number>()
       .domain([-maxAbsVal, 0, maxAbsVal])
-      .interpolator(d3.interpolateRdYlGn);
+      .interpolator(d3.interpolateRdYlGn as unknown as (t: number) => number);
 
     // Compute overall dimensions of the SVG.
     const svgWidth = margin.left + years.length * cellWidth + margin.right;
@@ -120,7 +120,7 @@ export default function PercentageChangeTable({
       )
       .attr("stroke", "#fff")
       // Add tooltip events for each cell.
-      .on("mouseover", function (event, d) {
+      .on("mouseover", function (_, d) {
         tooltip
           .html(
             `<strong>${d.market}</strong><br/>Year: ${
@@ -129,7 +129,7 @@ export default function PercentageChangeTable({
           )
           .style("opacity", "0.9");
       })
-      .on("mousemove", function (event, d) {
+      .on("mousemove", function (event) {
         tooltip
           .style("left", event.pageX + 12 + "px")
           .style("top", event.pageY + 12 + "px");
@@ -159,7 +159,7 @@ export default function PercentageChangeTable({
       // Dynamically set the text color based on cell background luminance.
       .style("fill", (d) => {
         const bgColor = d.value !== undefined ? colorScale(d.value) : "#ccc";
-        const luminance = d3.hsl(bgColor).l;
+        const luminance = d3.hsl(bgColor as string).l;
         return luminance < 0.5 ? "#fff" : "#000";
       })
       .text((d) => (d.value !== undefined ? d3.format(".1f")(d.value) : ""));

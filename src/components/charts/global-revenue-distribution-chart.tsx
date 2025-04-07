@@ -115,7 +115,7 @@ export default function GlobalRevenueDistributionChart({
             .attr("stroke-width", 0.5)
             // Offset the map copies horizontally based on the computed mapWidth.
             .attr("transform", `translate(${offset * mapWidth}, 0)`)
-            .on("mouseover", function (event, d: any) {
+            .on("mouseover", function (_, d: any) {
               const countryName = d.properties.name;
               const revenue = revenueByCountry.get(countryName) || 0;
               if (!revenue) return; // Do not show tooltip if there's no revenue.
