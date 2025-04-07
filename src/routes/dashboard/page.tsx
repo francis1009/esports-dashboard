@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { Sidebar } from "../../components/Sidebar";
-import Overview from "./overview";
 import Revenue from "./revenue";
 import Viewership from "./viewership";
 import PrizePool from "./prizePool";
@@ -10,7 +9,7 @@ import * as d3 from "d3";
 const Dashboard: React.FC = () => {
   const [activeSection, setActiveSection] = useLocalStorage(
     "activeSection",
-    "overview"
+    "revenue"
   );
   const [viewershipData, setViewershipData] = useState<any[]>([]);
   const [generalEsportsData, setGeneralEsportsData] = useState<any[]>([]);
@@ -88,8 +87,6 @@ const Dashboard: React.FC = () => {
 
   const renderActiveComponent = () => {
     switch (activeSection) {
-      case "overview":
-        return <Overview />;
       case "revenue":
         return (
           <Revenue
@@ -109,7 +106,13 @@ const Dashboard: React.FC = () => {
           />
         );
       default:
-        return <Overview />;
+        return (
+          <Revenue
+            globalRevenueData={globalRevenueData}
+            revenueByMarketData={revenueByMarketData}
+            revenueChangeData={revenueChangeData}
+          />
+        );
     }
   };
 
@@ -128,7 +131,6 @@ const Dashboard: React.FC = () => {
 
         {/* Mobile view */}
         <div className="block md:hidden space-y-8">
-          <Overview />
           <Revenue
             globalRevenueData={globalRevenueData}
             revenueByMarketData={revenueByMarketData}

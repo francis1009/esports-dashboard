@@ -115,6 +115,7 @@ export default function GlobalRevenueDistributionChart({
             .attr("stroke-width", 0.1)
             // Offset the map copies horizontally based on the computed mapWidth.
             .attr("transform", `translate(${offset * mapWidth}, 0)`)
+            .style("opacity", 0) // Start invisible for animation
             .on("mouseover", function (_, d: any) {
               const countryName = d.properties.name;
               const revenue = revenueByCountry.get(countryName) || 0;
@@ -142,7 +143,11 @@ export default function GlobalRevenueDistributionChart({
             .on("mouseout", function () {
               d3.select(this).attr("stroke-width", 0.1).attr("stroke", "#333");
               tooltip.style("opacity", "0");
-            });
+            })
+            .transition() // Add animation
+            .duration(1000)
+            .delay((_, i) => i * 5) // Stagger the animation
+            .style("opacity", 1); // Fade in
         });
 
         // --- LEGEND ---
@@ -183,9 +188,12 @@ export default function GlobalRevenueDistributionChart({
 
         legendGroup
           .append("rect")
-          .attr("width", legendWidth)
+          .attr("width", 0) // Start with zero width for animation
           .attr("height", legendHeight)
-          .style("fill", "url(#legend-gradient)");
+          .style("fill", "url(#legend-gradient)")
+          .transition() // Animate the legend
+          .duration(1500)
+          .attr("width", legendWidth); // Expand to full width
 
         const legendScale = d3
           .scaleLinear()
@@ -200,7 +208,12 @@ export default function GlobalRevenueDistributionChart({
         legendGroup
           .append("g")
           .attr("transform", `translate(0, ${legendHeight})`)
-          .call(legendAxis);
+          .style("opacity", 0) // Start invisible
+          .call(legendAxis)
+          .transition() // Animate the legend axis
+          .duration(800)
+          .delay(1000)
+          .style("opacity", 1); // Fade in
       })
       .catch((error) => {
         console.error("Error loading world GeoJSON:", error);

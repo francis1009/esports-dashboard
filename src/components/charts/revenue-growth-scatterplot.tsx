@@ -40,12 +40,12 @@ export default function RevenueGrowthScatterPlot({
     const svg = d3.select(chartRef.current);
     svg.selectAll("*").remove();
 
-    let tooltip = d3.select("body").select(".stacked-tooltip") as any;
+    let tooltip = d3.select("body").select(".scatter-tooltip") as any;
     if (tooltip.empty()) {
       tooltip = d3
         .select("body")
         .append("div")
-        .attr("class", "stacked-tooltip")
+        .attr("class", "scatter-tooltip")
         .style("position", "absolute")
         .style("padding", "8px 12px")
         .style("background", "#333")
@@ -138,24 +138,37 @@ export default function RevenueGrowthScatterPlot({
       .axisBottom(xScale)
       .ticks(8)
       .tickFormat((d) => d3.format(",.0f")(Number(d) / 1e6) + "M");
-    chartGroup
+
+    const xAxisGroup = chartGroup
       .append("g")
       .attr("class", "x-axis")
       .attr("transform", `translate(0, ${height})`)
-      .call(xAxis)
-      .selectAll("text")
-      .style("font-size", "12px");
+      .style("opacity", 0); // Start invisible for animation
+
+    xAxisGroup.call(xAxis);
+
+    xAxisGroup
+      .transition() // Add animation
+      .duration(800)
+      .style("opacity", 1); // Fade in
+
     // y-axis: Avg. Percentage Change.
     const yAxis = d3
       .axisLeft(yScale)
       .ticks(8)
       .tickFormat((d) => d + "%");
-    chartGroup
+
+    const yAxisGroup = chartGroup
       .append("g")
       .attr("class", "y-axis")
-      .call(yAxis)
-      .selectAll("text")
-      .style("font-size", "12px");
+      .style("opacity", 0); // Start invisible for animation
+
+    yAxisGroup.call(yAxis);
+
+    yAxisGroup
+      .transition() // Add animation
+      .duration(800)
+      .style("opacity", 1); // Fade in
 
     // x-axis label.
     chartGroup
@@ -166,7 +179,12 @@ export default function RevenueGrowthScatterPlot({
       .attr("text-anchor", "middle")
       .attr("fill", "#fff")
       .style("font-size", "14px")
-      .text("Avg. Revenue");
+      .style("opacity", 0) // Start invisible for animation
+      .text("Avg. Revenue")
+      .transition() // Add animation
+      .duration(800)
+      .delay(800)
+      .style("opacity", 1); // Fade in
 
     // y-axis label.
     chartGroup
@@ -178,7 +196,12 @@ export default function RevenueGrowthScatterPlot({
       .attr("text-anchor", "middle")
       .attr("fill", "#fff")
       .style("font-size", "14px")
-      .text("Avg. Percentage Change");
+      .style("opacity", 0) // Start invisible for animation
+      .text("Avg. Percentage Change")
+      .transition() // Add animation
+      .duration(800)
+      .delay(800)
+      .style("opacity", 1); // Fade in
 
     // ---------------------------
     // 5. Draw Scatter Points & Tooltip
@@ -190,11 +213,11 @@ export default function RevenueGrowthScatterPlot({
       .append("circle")
       .attr("cx", (d) => xScale(d.avgRevenue))
       .attr("cy", (d) => yScale(d.avgPctChange))
-      .attr("r", (d) => rScale(d.sumRevenue))
+      .attr("r", 0) // Start with radius 0 for animation
       .attr("fill", (d) => colorScale(d.market) as string)
       .attr("stroke", "#fff")
       .attr("stroke-width", 1)
-      .attr("opacity", 0.8)
+      .attr("opacity", 0) // Start invisible for animation
       .on("mouseover", function (event, d) {
         d3.select(this)
           .transition()
@@ -224,7 +247,12 @@ export default function RevenueGrowthScatterPlot({
           .attr("stroke-width", 1)
           .attr("opacity", 0.8);
         tooltip.style("opacity", 0);
-      });
+      })
+      .transition() // Add animation
+      .duration(1000)
+      .delay((_, i) => i * 100) // Stagger the animation
+      .attr("r", (d) => rScale(d.sumRevenue)) // Grow to full size
+      .attr("opacity", 0.8);
 
     // ---------------------------
     // 6. Draw Color Legend (Top Right)
@@ -241,7 +269,8 @@ export default function RevenueGrowthScatterPlot({
       const legendItem = colorLegendGroup
         .append("g")
         .attr("class", "legend-item")
-        .attr("transform", `translate(0, ${i * 20})`);
+        .attr("transform", `translate(0, ${i * 20})`)
+        .style("opacity", 0); // Start invisible for animation
 
       legendItem
         .append("rect")
@@ -257,6 +286,13 @@ export default function RevenueGrowthScatterPlot({
         .attr("fill", "#fff")
         .attr("font-size", "12px")
         .text(market);
+
+      // Animate each legend item
+      legendItem
+        .transition()
+        .duration(500)
+        .delay(1000 + i * 100)
+        .style("opacity", 1); // Fade in
     });
 
     // ---------------------------
@@ -279,7 +315,12 @@ export default function RevenueGrowthScatterPlot({
       .attr("y", 10)
       .attr("fill", "#fff")
       .attr("font-size", "15px")
-      .text("Absolute Revenue");
+      .style("opacity", 0) // Start invisible for animation
+      .text("Absolute Revenue")
+      .transition() // Add animation
+      .duration(500)
+      .delay(1400)
+      .style("opacity", 1); // Fade in
 
     // Generate 5 representative size values (e.g., 20%, 40%, 60%, 80%, 100% of the rMax).
     const sizeValues = [rMax * 0.2, rMax * 0.4, rMax * 0.6, rMax * 0.8, rMax];
@@ -288,7 +329,8 @@ export default function RevenueGrowthScatterPlot({
       const legendItem = sizeLegendGroup
         .append("g")
         .attr("class", "size-legend-item")
-        .attr("transform", `translate(0, ${20 + i * 30})`);
+        .attr("transform", `translate(0, ${20 + i * 30})`)
+        .style("opacity", 0); // Start invisible for animation
 
       legendItem
         .append("circle")
@@ -305,6 +347,13 @@ export default function RevenueGrowthScatterPlot({
         .attr("fill", "#fff")
         .attr("font-size", "12px")
         .text(d3.format(",.0f")(val));
+
+      // Animate each size legend item
+      legendItem
+        .transition()
+        .duration(500)
+        .delay(1500 + i * 100)
+        .style("opacity", 1); // Fade in
     });
   }, [revenueByMarketData, revenueChangeData]);
 

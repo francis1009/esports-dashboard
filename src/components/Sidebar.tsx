@@ -1,4 +1,4 @@
-import { DollarSign, Trophy, Eye, BarChart2 } from "lucide-react";
+import { DollarSign, Trophy, Eye } from "lucide-react";
 
 interface SidebarProps {
   activeSection: string;
@@ -7,7 +7,6 @@ interface SidebarProps {
 
 export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
   const navItems = [
-    { id: "overview", label: "Overview", icon: BarChart2 },
     { id: "revenue", label: "Revenue Analysis", icon: DollarSign },
     { id: "viewership", label: "Viewership Trends", icon: Eye },
     { id: "prizePool", label: "Prize Pool Distribution", icon: Trophy },

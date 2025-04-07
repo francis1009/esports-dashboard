@@ -73,9 +73,8 @@ export default function PercentageChangeTable({
     // Create a diverging color scale.
     // Negative values go toward red, positive toward green.
     const colorScale = d3
-      .scaleDiverging<number>()
-      .domain([-maxAbsVal, 0, maxAbsVal])
-      .interpolator(d3.interpolateRdYlGn as unknown as (t: number) => number);
+      .scaleSequential(d3.interpolateRdYlGn)
+      .domain([-maxAbsVal, maxAbsVal]);
 
     // Compute overall dimensions of the SVG.
     const svgWidth = margin.left + years.length * cellWidth + margin.right;
@@ -114,7 +113,8 @@ export default function PercentageChangeTable({
       .append("rect")
       .attr("x", (_, i) => i * cellWidth)
       .attr("width", cellWidth)
-      .attr("height", cellHeight)
+      .attr("height", 0) // Start with zero height for animation
+      .attr("y", cellHeight) // Position at the bottom for animation
       .attr("fill", (d) =>
         d.value !== undefined ? colorScale(d.value) : "#ccc"
       )
@@ -138,7 +138,12 @@ export default function PercentageChangeTable({
       .on("mouseout", function () {
         d3.select(this).attr("stroke", "#fff");
         tooltip.style("opacity", "0");
-      });
+      })
+      .transition() // Add animation
+      .duration(800)
+      .delay((_, i) => i * 50) // Stagger by column
+      .attr("height", cellHeight)
+      .attr("y", 0); // Grow to full height
 
     // Add text labels to each cell.
     rows
@@ -158,13 +163,18 @@ export default function PercentageChangeTable({
       .attr("text-anchor", "middle")
       // Disable pointer events on the text so it doesn't block mouse events.
       .style("pointer-events", "none")
+      .style("opacity", 0) // Start invisible for animation
       // Dynamically set the text color based on cell background luminance.
       .style("fill", (d) => {
         const bgColor = d.value !== undefined ? colorScale(d.value) : "#ccc";
-        const luminance = d3.hsl(bgColor as string).l;
+        const luminance = d3.hsl(String(bgColor)).l;
         return luminance < 0.5 ? "#fff" : "#000";
       })
-      .text((d) => (d.value !== undefined ? d3.format(".1f")(d.value) : ""));
+      .text((d) => (d.value !== undefined ? d3.format(".1f")(d.value) : ""))
+      .transition() // Add animation
+      .duration(400)
+      .delay((_, i) => 800 + i * 50)
+      .style("opacity", 1); // Fade in
 
     // Add column labels for years.
     const colLabels = chartGroup.append("g").attr("class", "col-labels");
@@ -178,7 +188,12 @@ export default function PercentageChangeTable({
       .attr("text-anchor", "middle")
       .style("font-weight", "bold")
       .style("fill", "#fff")
-      .text((d) => d);
+      .style("opacity", 0) // Start invisible for animation
+      .text((d) => d)
+      .transition() // Add animation
+      .duration(500)
+      .delay((_, i) => i * 100)
+      .style("opacity", 1); // Fade in
 
     // Add row labels for markets.
     const rowLabels = chartGroup.append("g").attr("class", "row-labels");
@@ -193,7 +208,12 @@ export default function PercentageChangeTable({
       .attr("text-anchor", "end")
       .style("font-weight", "bold")
       .style("fill", "#fff")
-      .text((d) => d);
+      .style("opacity", 0) // Start invisible for animation
+      .text((d) => d)
+      .transition() // Add animation
+      .duration(500)
+      .delay((_, i) => i * 100)
+      .style("opacity", 1); // Fade in
   }, [revenueChangeData]);
 
   return (

@@ -77,7 +77,7 @@ export default function RevenueByMarketStackedBarChart({
     // Create an object for each year that holds:
     // • year (number)
     // • yearType (actualOrForecast, assumed consistent across markets for that year)
-    // • Each market’s revenue keyed by market name,
+    // • Each market's revenue keyed by market name,
     // • Extra keys for percentage change (e.g., `${market}-pct`) looked up from revenueChangeData,
     // • A "total" revenue for that year.
     const dataByYearMap = d3.group(revenueByMarketData, (d) => d.year);
@@ -101,7 +101,9 @@ export default function RevenueByMarketStackedBarChart({
     dataByYear.sort((a, b) => a.year - b.year);
 
     // Get unique markets sorted alphabetically.
-    const markets = Array.from(new Set(revenueByMarketData.map((d) => d.market)));
+    const markets = Array.from(
+      new Set(revenueByMarketData.map((d) => d.market))
+    );
     markets.sort((a, b) => a.localeCompare(b));
     // For vertical stacking with the alphabetical order from top to bottom,
     // we reverse the stacking order (since the first series is drawn at the bottom).
@@ -167,14 +169,19 @@ export default function RevenueByMarketStackedBarChart({
       .append("rect")
       .attr("class", "year-bg")
       .attr("x", (d) => xScale(d.year.toString())!)
-      .attr("y", (d) => yScale(d.total))
+      .attr("y", chartHeight) // Start at the bottom for animation
       .attr("width", xScale.bandwidth())
-      .attr("height", (d) => chartHeight - yScale(d.total))
+      .attr("height", 0) // Start with zero height for animation
       .style("fill", "none")
       .style("stroke", (d) => (d.yearType === "forecast" ? "#aaa" : "none"))
       .style("stroke-dasharray", (d) =>
         d.yearType === "forecast" ? "4 2" : "0"
-      );
+      )
+      .transition() // Add animation
+      .duration(800)
+      .delay((d) => d.year * 100) // Delay by year
+      .attr("y", (d) => yScale(d.total))
+      .attr("height", (d) => chartHeight - yScale(d.total));
 
     // Draw the stacked segments.
     // Vertical bars:
@@ -190,15 +197,17 @@ export default function RevenueByMarketStackedBarChart({
       .attr("class", "series")
       .attr("fill", (d) => colorScale(d.key) as string);
 
-    seriesGroup
+    // Create the rectangles for each segment
+    const rects = seriesGroup
       .selectAll("rect")
       .data((d) => d)
       .enter()
       .append("rect")
       .attr("x", (d) => xScale(d.data.year.toString())!)
-      .attr("y", (d) => yScale(d[1]))
       .attr("width", xScale.bandwidth())
-      .attr("height", (d) => yScale(d[0]) - yScale(d[1]))
+      // Set initial state for animation
+      .attr("y", chartHeight)
+      .attr("height", 0)
       .on("mouseover", function (_, d) {
         d3.select(this).attr("opacity", 0.7);
         // Retrieve the market key from the parent group.
@@ -207,7 +216,7 @@ export default function RevenueByMarketStackedBarChart({
         };
         const marketKey = market.key;
         const revenueSegment = d[1] - d[0];
-        const pctChange = d.data[`${market}-pct`];
+        const pctChange = d.data[`${marketKey}-pct`];
         tooltip
           .html(
             `<strong>${marketKey}</strong><br/>
@@ -228,13 +237,25 @@ export default function RevenueByMarketStackedBarChart({
         tooltip.style("opacity", "0");
       });
 
+    // Animate the rectangles
+    rects
+      .transition()
+      .duration(1000)
+      .delay((d) => 300 + (Number(d.data.year) - 2017) * 100) // Delay by year
+      .attr("y", (d) => yScale(d[1]))
+      .attr("height", (d) => yScale(d[0]) - yScale(d[1]));
+
     // Add the x-axis (years).
     const xAxis = d3.axisBottom(xScale);
     chartGroup
       .append("g")
       .attr("class", "x-axis")
       .attr("transform", `translate(0, ${chartHeight})`)
-      .call(xAxis);
+      .style("opacity", 0) // Start invisible for animation
+      .call(xAxis)
+      .transition() // Add animation
+      .duration(800)
+      .style("opacity", 1); // Fade in
 
     // Add the y-axis (Revenue) with custom tick formatting.
     const yAxis = d3
@@ -243,7 +264,14 @@ export default function RevenueByMarketStackedBarChart({
       .tickFormat((d) =>
         d === 0 ? "0.0" : d3.format(",.0f")(Number(d) / 1e6) + "M"
       );
-    chartGroup.append("g").attr("class", "y-axis").call(yAxis);
+    chartGroup
+      .append("g")
+      .attr("class", "y-axis")
+      .style("opacity", 0) // Start invisible for animation
+      .call(yAxis)
+      .transition() // Add animation
+      .duration(800)
+      .style("opacity", 1); // Fade in
 
     // Add y-axis label.
     chartGroup
@@ -254,7 +282,12 @@ export default function RevenueByMarketStackedBarChart({
       .attr("dy", "1em")
       .style("text-anchor", "middle")
       .style("fill", "#fff")
-      .text("Revenue");
+      .style("opacity", 0) // Start invisible for animation
+      .text("Revenue")
+      .transition() // Add animation
+      .duration(800)
+      .delay(500)
+      .style("opacity", 1); // Fade in
 
     // Add x-axis label.
     chartGroup
@@ -263,7 +296,12 @@ export default function RevenueByMarketStackedBarChart({
       .attr("y", chartHeight + 40)
       .style("text-anchor", "middle")
       .style("fill", "#fff")
-      .text("Year");
+      .style("opacity", 0) // Start invisible for animation
+      .text("Year")
+      .transition() // Add animation
+      .duration(800)
+      .delay(500)
+      .style("opacity", 1); // Fade in
 
     // --- Add a line indicator between 2024 and 2025 ---
     const year2024 = xScale("2024");
@@ -277,10 +315,14 @@ export default function RevenueByMarketStackedBarChart({
         .attr("x1", boundaryX)
         .attr("x2", boundaryX)
         .attr("y1", -30)
-        .attr("y2", chartHeight)
+        .attr("y2", -30) // Start with zero height for animation
         .attr("stroke", "#fff")
         .attr("stroke-width", 2)
-        .attr("stroke-dasharray", "5,5");
+        .attr("stroke-dasharray", "5,5")
+        .transition() // Add animation
+        .duration(1200)
+        .delay(1500)
+        .attr("y2", chartHeight); // Grow to full height
 
       // Add label "Actual" on the left of the line.
       chartGroup
@@ -290,7 +332,12 @@ export default function RevenueByMarketStackedBarChart({
         .attr("text-anchor", "end")
         .style("fill", "#fff")
         .style("font-size", "14px")
-        .text("Actual");
+        .style("opacity", 0) // Start invisible for animation
+        .text("Actual")
+        .transition() // Add animation
+        .duration(800)
+        .delay(2000)
+        .style("opacity", 1); // Fade in
 
       // Add label "Forecast" on the right of the line.
       chartGroup
@@ -300,7 +347,12 @@ export default function RevenueByMarketStackedBarChart({
         .attr("text-anchor", "start")
         .style("fill", "#fff")
         .style("font-size", "14px")
-        .text("Forecast");
+        .style("opacity", 0) // Start invisible for animation
+        .text("Forecast")
+        .transition() // Add animation
+        .duration(800)
+        .delay(2000)
+        .style("opacity", 1); // Fade in
     }
 
     // --- Add Legend at the top right ---
@@ -322,13 +374,16 @@ export default function RevenueByMarketStackedBarChart({
         .attr(
           "transform",
           `translate(0, ${i * (legendRectSize + legendSpacing)})`
-        );
+        )
+        .style("opacity", 0); // Start invisible for animation
+
       legendItem
         .append("rect")
         .attr("width", legendRectSize)
         .attr("height", legendRectSize)
         .attr("fill", colorScale(market) as string)
         .attr("stroke", "#fff");
+
       legendItem
         .append("text")
         .attr("x", legendRectSize + 5)
@@ -337,6 +392,13 @@ export default function RevenueByMarketStackedBarChart({
         .style("fill", "#fff")
         .style("font-size", "12px")
         .text(truncateLabel(market, 10));
+
+      // Animate each legend item
+      legendItem
+        .transition()
+        .duration(500)
+        .delay(1000 + i * 100)
+        .style("opacity", 1); // Fade in
     });
   }, [revenueByMarketData, revenueChangeData]);
 
