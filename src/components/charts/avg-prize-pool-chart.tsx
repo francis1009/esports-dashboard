@@ -108,18 +108,18 @@ export default function AvgPrizePoolChart({
 
     // 5) Color scale based on genre
     const colorScale = d3.scaleOrdinal<string>().domain(topGenres).range([
-      "#3182bd", // Battle Royale
-      "#6baed6", // Sports
-      "#9ecae1", // Multiplayer Online
-      "#c6dbef", // Role-Playing Game
-      "#e6550d", // Racing
-      "#fd8d3c", // Collectible Card Game
-      "#fdae6b", // First-Person Shooter
-      "#fdd0a2", // Strategy
-      "#31a354", // Third-Person Shooter
-      "#74c476", // Music/Rhythm Game
-      "#a1d99b", // Fighting Game
-      "#c7e9c0", // Puzzle Game
+      "#8dd3c7", // Multiplayer Online Battle Arena
+      "#ffffb3", // Battle Royale
+      "#bebada", // First-Person Shooter
+      "#fb8072", // Collectible Card Game
+      "#80b1d3", // Strategy
+      "#fdb462", // Sports
+      "#b3de69", // Third-Person Shooter
+      "#fccde5", // Role-Playing Game
+      "#bc80bd", // Fighting Game
+      "#ffed6f", // Racing
+      "#ccebc5", // Music/Rhythm Game
+      "#b3e2cd", // Puzzle Game
     ]);
 
     // 6) Update axes

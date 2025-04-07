@@ -23,7 +23,6 @@ interface GeneralEsportsData {
 }
 
 interface HistoricalEsportsData {
-  date: number;
   game: string;
   earnings: number;
 }

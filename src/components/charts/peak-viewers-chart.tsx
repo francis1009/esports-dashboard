@@ -192,8 +192,8 @@ export default function PeakViewersChart({
       "Dota 2": "#80b1d3",
       "Counter-Strike: Global Offensive": "#fdb462",
       Fortnite: "#b3de69",
-      "Just Chatting": "#fccde5",
-      "Special Events": "#bc80bd",
+      "Call of Duty: Warzone": "#fccde5",
+      "World of Warcraft": "#bc80bd",
       "League of Legends": "#ffed6f",
       Others: "#d9d9d9",
     };

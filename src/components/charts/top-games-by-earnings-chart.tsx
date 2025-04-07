@@ -3,7 +3,6 @@ import * as d3 from "d3";
 import { ChartColumnDecreasing } from "lucide-react";
 
 interface HistoricalEsportsData {
-  date: number;
   game: string;
   earnings: number;
 }
@@ -126,23 +125,20 @@ export default function TopGamesByEarningsChart({
 
     // Create a colour scale based on the unique genres present in topGames.
     const uniqueGenres = Array.from(new Set(topGames.map((d) => d.genre)));
-    const colorScale = d3
-      .scaleOrdinal<string>()
-      .domain(uniqueGenres)
-      .range([
-        "#3182bd",
-        "#6baed6",
-        "#9ecae1",
-        "#c6dbef",
-        "#e6550d",
-        "#fd8d3c",
-        "#fdae6b",
-        "#fdd0a2",
-        "#31a354",
-        "#74c476",
-        "#a1d99b",
-        "#c7e9c0",
-      ]);
+    const colorScale = d3.scaleOrdinal<string>().domain(uniqueGenres).range([
+      "#8dd3c7", // Multiplayer Online Battle Arena
+      "#ffffb3", // Battle Royale
+      "#bebada", // First-Person Shooter
+      "#80b1d3", // Strategy
+      "#fdb462", // Sports
+      "#fb8072", // Collectible Card Game
+      "#b3de69", // Third-Person Shooter
+      "#fccde5", // Role-Playing Game
+      "#bc80bd", // Fighting Game
+      "#ffed6f", // Racing
+      "#ccebc5", // Music/Rhythm Game
+      "#b3e2cd", // Puzzle Game
+    ]);
 
     // Axes.
     const xAxis = d3

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { Sidebar } from "../../components/Sidebar";
 import Overview from "./overview";
+import Revenue from "./revenue";
 import Viewership from "./viewership";
 import PrizePool from "./prizePool";
 import * as d3 from "d3";
@@ -14,9 +15,9 @@ const Dashboard: React.FC = () => {
   const [viewershipData, setViewershipData] = useState<any[]>([]);
   const [generalEsportsData, setGeneralEsportsData] = useState<any[]>([]);
   const [historicalEsportsData, setHistoricalEsportsData] = useState<any[]>([]);
-  // const [globalRevenueData, setGlobalRevenueData] = useState<any[]>([]);
-  // const [revenueData, setRevenueData] = useState<any[]>([]);
-  // const [revenueChangeData, setRevenueChangeData] = useState<any[]>([]);
+  const [globalRevenueData, setGlobalRevenueData] = useState<any[]>([]);
+  const [revenueByMarketData, setRevenueByMarketData] = useState<any[]>([]);
+  const [revenueChangeData, setRevenueChangeData] = useState<any[]>([]);
 
   useEffect(() => {
     // Load CSV data once when the Dashboard mounts
@@ -44,11 +45,38 @@ const Dashboard: React.FC = () => {
 
     d3.csv("/data/HistoricalEsportData.csv").then((rawData) => {
       const parsed = rawData.map((d) => ({
-        date: +d.Date,
         game: d.Game,
         earnings: +d.Earnings,
       }));
       setHistoricalEsportsData(parsed);
+    });
+
+    d3.csv("/data/GlobalRevenueUSDComparison.csv").then((rawData) => {
+      const parsed = rawData.map((d) => ({
+        country: d.Country,
+        year: +d.Year,
+        revenue: +d.Revenue_USD,
+      }));
+      setGlobalRevenueData(parsed);
+    });
+
+    d3.csv("/data/RevenueByMarketUSD.csv").then((rawData) => {
+      const parsed = rawData.map((d) => ({
+        actualOrForecast: d.Actual_or_Forecast,
+        market: d.Market_Revenue_by_Market_USD,
+        year: new Date(d.Year_Revenue_by_Market_USD).getFullYear(),
+        revenue: +d.Revenue,
+      }));
+      setRevenueByMarketData(parsed);
+    });
+
+    d3.csv("/data/RevenuePercentChangeByMarket.csv").then((rawData) => {
+      const parsed = rawData.map((d) => ({
+        market: d.Market_Revenue_PC_Change_by_Market,
+        year: new Date(d.Year_Revenue_PC_Change_by_Market).getFullYear(),
+        revenueChange: +d.Percentage_Change,
+      }));
+      setRevenueChangeData(parsed);
     });
   }, []);
 
@@ -63,7 +91,13 @@ const Dashboard: React.FC = () => {
       case "overview":
         return <Overview />;
       case "revenue":
-        return <Overview />;
+        return (
+          <Revenue
+            globalRevenueData={globalRevenueData}
+            revenueByMarketData={revenueByMarketData}
+            revenueChangeData={revenueChangeData}
+          />
+        );
       case "viewership":
         return <Viewership gameData={viewershipData} />;
       case "prizePool":
@@ -95,7 +129,11 @@ const Dashboard: React.FC = () => {
         {/* Mobile view */}
         <div className="block md:hidden space-y-8">
           <Overview />
-          {/* <Revenue /> */}
+          <Revenue
+            globalRevenueData={globalRevenueData}
+            revenueByMarketData={revenueByMarketData}
+            revenueChangeData={revenueChangeData}
+          />
           <Viewership gameData={viewershipData} />
           <PrizePool
             viewershipData={viewershipData}
