@@ -1,3 +1,4 @@
+// About.tsx
 import { Award, BookOpen, GraduationCap, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -12,8 +13,8 @@ const About: React.FC = () => {
           </h1>
           <div className="h-1 w-24 bg-[#6366f1] rounded-full mb-6"></div>
           <p className="text-gray-400 max-w-3xl">
-            Exploring the financial dynamics and growth patterns of the
-            competitive gaming industry through interactive data visualizations.
+            Visualizing Revenue Streams, Viewership Trends, and Financial
+            Sustainability in the Esports Industry
           </p>
         </div>
 
@@ -26,28 +27,31 @@ const About: React.FC = () => {
           <div className="bg-[#131825] rounded-lg p-6 border border-gray-800/20">
             <p className="text-gray-300 leading-relaxed mb-4">
               Esports has rapidly evolved from a niche hobby into a
-              multi-billion dollar industry, attracting millions of viewers and
-              high-profile sponsors. Competitive gaming now rivals traditional
-              sports in terms of audience size, with major tournaments such as
-              The International (Dota 2) and League of Legends World
-              Championship drawing millions of live viewers.
+              multi-billion dollar industry, drawing millions of viewers and
+              high-profile sponsorships. Major tournaments such as The
+              International (Dota 2) and League of Legends World Championship
+              now rival traditional sports in global audience reach. Streaming
+              platforms like Twitch and Youtube have further fueled this growth,
+              creating a vibrant ecosystem of professional players, content
+              creators and communities.
             </p>
             <p className="text-gray-300 leading-relaxed mb-4">
-              Despite the rapid expansion, the Esports industry remains
-              misunderstood, particularly when it comes to financial
-              sustainability. Unlike in traditional sports where ticket sales,
-              media rights and merchandise drive revenue, Esports teams and
-              tournaments rely heavily on sponsorships. Additionally, revenue
-              distribution is highly uneven, with a handful of major tournaments
-              and game titles commanding the majority of earnings while smaller
-              competitions struggle for financial stability.
+              This project dives into four key dimensions critical to
+              understanding Esports' revenue streams, viewership trends and
+              subsequently, financial sustainability. First, a breakdown of
+              revenue streams is provided, which highlights how income is
+              generated across tournaments, and platforms. Next, we examine the
+              industry's reliance on sponsorships, which might leave it
+              vulnerable to market shifts and raises concerns about long-term
+              financial stability.
             </p>
             <p className="text-gray-300 leading-relaxed">
-              This project aims to explore these complexities by visualizing key
-              industry trends using interactive data visualizations. By
-              analyzing revenue streams, viewership patterns and financial data
-              from major tournaments, we seek to provide insights into the real
-              drivers of Esports growth and the challenges it faces.
+              Our analysis of prize pool distribution uncovers stark disparities
+              - while top-tier tournaments and more popular games dominate
+              funding, smaller events and obscure games struggle to stay afloat,
+              exposing structural inequalities. Finally, we explore viewership
+              trends, identifying emerging titles and formats that could shape
+              the future of competitive gaming.
             </p>
           </div>
         </section>
@@ -60,31 +64,32 @@ const About: React.FC = () => {
           </h2>
           <div className="bg-[#131825] rounded-lg p-6 border border-gray-800/20">
             <p className="text-gray-300 leading-relaxed mb-4">
-              The Esports industry has grown exponentially, from a $1.64 billion
-              market in 2022 to a projected $2.89 billion by 2025. However, in
-              2022, over 60% of Esports revenue - approximately $800 million -
-              came from sponsorship deals with endemic and non-endemic brands.
-              This heavy dependence leaves the industry vulnerable to
-              fluctuations in sponsor support, raising concerns about long-term
-              financial stability.
+              As the Esports industry increases in size and influence, its
+              financial structure remains uneven and opaque. While the headlines
+              boast billion-dollar valuations and skyrocketing viewership, the
+              sources and sustainability of this growth deserve closer scrutiny.
+              One of the most striking findings from our data is the
+              disproportionate reliance on sponsorships. In 2022 alone,
+              sponsorships made up over 60% of the industry's total revenue.
+              This overwhelming dependence on brand support leaves the ecosystem
+              vulnerable to shifts in marketing budgets and economic downturns.
             </p>
             <p className="text-gray-300 leading-relaxed mb-4">
-              Another major challenge is the uneven distribution of revenue. A
-              small number of top tournaments account for the majority of
-              Esports prize pools, leaving smaller competitions and teams
-              financially strained. Despite increasing industry revenues, many
-              Esports organizations struggle to remain profitable due to high
-              player salaries, operational costs, and inconsistent prize money
-              distribution.
+              Another critical issue lies in how tournament prize pools are
+              distributed. Although a few high-profile events, like Dota 2's The
+              International, offer massive rewards, most smaller tournaments
+              receive only a fraction of the industry's earnings. This imbalance
+              makes it difficult for lesser-known teams and emerging titles to
+              compete, limiting diversity and innovation in the space.
             </p>
             <p className="text-gray-300 leading-relaxed">
-              Despite these financial complexities, there is currently no
-              centralized platform that consolidates key Esports financial data,
-              revenue sources, and viewership trends into an accessible and
-              interactive format. Our project addresses this gap with an
-              interactive Esports analytics dashboard that visualizes revenue
-              streams, sponsorship dependencies, prize pool distribution, and
-              viewership trends.
+              Despite these challenges, there is currently no centralized,
+              interactive dashboard that unifies financial and viewership data
+              across the Esports ecosystem. Most existing analyses remain
+              fragmented, making it difficult for stakeholders to make
+              strategic, data-driven decisions. Our dashboard bridges this gap
+              by consolidating key insights on revenue streams, sponsorship
+              dependencies, prize pool distribution, and viewership trends.
             </p>
           </div>
         </section>
@@ -98,12 +103,12 @@ const About: React.FC = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                name: "Francis Gabriel Manalo Valdez",
-                email: "francism56789@gmail.com",
-              },
-              {
                 name: "Daryl Teo Jun Wei",
                 email: "daryl.teo.2021@scis.smu.edu.sg",
+              },
+              {
+                name: "Francis Gabriel Manalo Valdez",
+                email: "fvaldez.2021@scis.smu.edu.sg",
               },
               {
                 name: "Kenneth Lim Hu Gui",
@@ -142,34 +147,47 @@ const About: React.FC = () => {
           <div className="bg-[#131825] rounded-lg p-6 border border-gray-800/20">
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-xl font-medium mb-3">React and D3.js</h3>
+                <h3 className="text-xl font-medium mb-3">
+                  React with Vite & TypeScript
+                </h3>
                 <p className="text-gray-300 leading-relaxed mb-4">
-                  Our dashboard's interactive user interface is built using
-                  React, with D3.js integrated within React components to
-                  produce real-time, interactive visualizations for exploring
-                  insights on revenue streams, sponsorship dependencies, and
-                  viewership patterns.
+                  We chose React as our front-end framework for its
+                  component-based architecture and ability to build dynamic,
+                  single-page applications. Vite accelerates our development
+                  workflow with fast hot module reloading and optimized
+                  bundling. The application is written in TypeScript, which
+                  enhances code robustness with static type checking.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-xl font-medium mb-3">D3.js</h3>
+                <p className="text-gray-300 leading-relaxed mb-4">
+                  To bring data to life with compelling visuals, our dashboard
+                  integrates D3.js within React components. D3.js is key to
+                  drawing animated and interactive charts that display insights.
+                  Its powerful data binding and transition features allow for
+                  smooth animations and informative tooltips, enabling users to
+                  intuitively explore trends and patterns.
                 </p>
               </div>
               <div>
                 <h3 className="text-xl font-medium mb-3">Tableau</h3>
                 <p className="text-gray-300 leading-relaxed mb-4">
-                  Tableau is employed for constructing static, high-level
-                  dashboards that offer historical context and trend analysis,
-                  complementing our React/D3.js frontend with in-depth
-                  visualizations of prize pool distributions, sponsorship
-                  impact, and viewership trends.
+                  In the early stages of design, Tableau served as an essential
+                  tool for prototyping and experimentation. We leveraged
+                  Tableau's vast array of visualization options to experiment
+                  with various chart types and layouts before implementing them
+                  with D3.js on our website.
                 </p>
               </div>
               <div>
-                <h3 className="text-xl font-medium mb-3">
-                  APIs & Data Sources
-                </h3>
+                <h3 className="text-xl font-medium mb-3">Vercel</h3>
                 <p className="text-gray-300 leading-relaxed mb-4">
-                  We incorporate several key APIs including Twitch API, YouTube
-                  API, Kaggle API, and public data sources from platforms such
-                  as Statista to ensure our visualizations are powered by
-                  accurate and current data.
+                  For deployment, we rely on Vercel, a platform built to support
+                  modern web applications with ease. Vercel offers streamlined
+                  deployment, global content delivery, and automated continuous
+                  integration, ensuring that our application remains performant
+                  and secure.
                 </p>
               </div>
             </div>
@@ -180,7 +198,8 @@ const About: React.FC = () => {
         <div className="mt-12 bg-[#131825] rounded-lg p-4 border border-gray-800/20 text-sm text-gray-400 animate-fade-in [animation-delay:400ms]">
           <p>
             <strong>Data Sources:</strong> Esports Earnings, Twitch Tracker,
-            Statista, and other public datasets. Last updated: March 2025.
+            Statista, Kaggle datasets on tournament earnings and Twitch
+            viewership. Last updated: April 2025.
           </p>
         </div>
 

@@ -36,7 +36,7 @@ const Home: React.FC = () => {
 
             <p className="text-lg md:text-xl text-gray-300 max-w-2xl">
               Our comprehensive analytics dashboard provides key insights into
-              the esports ecosystem — from sponsorships and prize pools to
+              the esports ecosystem — from revenue and prize pools to
               audience trends — helping you understand the factors driving
               industry growth and sustainability.
             </p>
@@ -46,8 +46,8 @@ const Home: React.FC = () => {
               {[
                 {
                   icon: BarChart,
-                  title: "Sponsorship Analysis",
-                  desc: "Explore sponsorship trends and distribution",
+                  title: "Revenue Analysis",
+                  desc: "Explore revenue trends and distribution",
                   delay: "100ms",
                 },
                 {
