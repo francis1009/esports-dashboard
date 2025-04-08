@@ -18,7 +18,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.play().catch((error) => {
-        console.log("Autoplay prevented:", error);
+        console.error("Autoplay prevented:", error);
       });
     }
   }, []);
@@ -36,9 +36,9 @@ const Home: React.FC = () => {
 
             <p className="text-lg md:text-xl text-gray-300 max-w-2xl">
               Our comprehensive analytics dashboard provides key insights into
-              the esports ecosystem — from revenue and prize pools to
-              audience trends — helping you understand the factors driving
-              industry growth and sustainability.
+              the esports ecosystem — from revenue and prize pools to audience
+              trends — helping you understand the factors driving industry
+              growth and sustainability.
             </p>
 
             {/* Animated feature cards */}

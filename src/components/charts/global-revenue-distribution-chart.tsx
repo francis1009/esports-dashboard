@@ -91,13 +91,11 @@ export default function GlobalRevenueDistributionChart({
         const pathGen = d3.geoPath().projection(projection);
 
         // Calculate the actual drawn map's bounds.
-        // This gives you two corners: [[xMin, yMin], [xMax, yMax]]
         const bounds = pathGen.bounds(worldData);
         const mapWidth = bounds[1][0] - bounds[0][0];
-        // console.log("Map Bounds:", bounds, "Map Width:", mapWidth);
 
-        // Draw 5 copies.
-        const offsets = [-2, -1, 0, 1, 2];
+        // Draw 7 copies for panning.
+        const offsets = [-3, -2, -1, 0, 1, 2, 3];
         offsets.forEach((offset) => {
           mapGroup
             .selectAll(`path.offset${offset}`)
@@ -144,7 +142,7 @@ export default function GlobalRevenueDistributionChart({
               d3.select(this).attr("stroke-width", 0.1).attr("stroke", "#333");
               tooltip.style("opacity", "0");
             })
-            .transition() // Add animation
+            .transition()
             .duration(1000)
             .delay((_, i) => i * 5) // Stagger the animation
             .style("opacity", 1); // Fade in

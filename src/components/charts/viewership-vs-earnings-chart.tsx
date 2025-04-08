@@ -42,7 +42,6 @@ export default function ViewershipVsEarningsChart({
     }
 
     // 1) Join each viewership record with its earnings info from general data.
-    //    Also attach the genre and filter by topGenres.
     const joinedData = viewershipData
       .map((d) => {
         const earningInfo = generalEsportsData.find((e) => e.game === d.game);

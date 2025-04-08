@@ -9,12 +9,12 @@ interface YoYGrowthData {
 }
 
 interface YoYGrowthChartProps {
-  data: YoYGrowthData[]; // raw CSV rows
+  data: YoYGrowthData[];
   topNGames: number;
-  topGames: string[]; // array of game names to include
+  topGames: string[];
 }
 
-// Utility to truncate a string from the END if it's too long
+// Utility to truncate a string from the end if it's too long
 function truncateLabel(name: string, maxLen = 25) {
   if (name.length <= maxLen) return name;
   return name.slice(0, maxLen - 3) + "...";

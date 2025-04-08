@@ -4,7 +4,7 @@ import { Grid3X3 } from "lucide-react";
 
 interface RevenueChangeData {
   market: string;
-  year: number; // already in YYYY format
+  year: number;
   revenueChange: number;
 }
 
@@ -139,7 +139,7 @@ export default function PercentageChangeTable({
         d3.select(this).attr("stroke", "#fff");
         tooltip.style("opacity", "0");
       })
-      .transition() // Add animation
+      .transition()
       .duration(800)
       .delay((_, i) => i * 50) // Stagger by column
       .attr("height", cellHeight)
@@ -161,7 +161,6 @@ export default function PercentageChangeTable({
       .attr("y", cellHeight / 2)
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
-      // Disable pointer events on the text so it doesn't block mouse events.
       .style("pointer-events", "none")
       .style("opacity", 0) // Start invisible for animation
       // Dynamically set the text color based on cell background luminance.
@@ -171,7 +170,7 @@ export default function PercentageChangeTable({
         return luminance < 0.5 ? "#fff" : "#000";
       })
       .text((d) => (d.value !== undefined ? d3.format(".1f")(d.value) : ""))
-      .transition() // Add animation
+      .transition()
       .duration(400)
       .delay((_, i) => 800 + i * 50)
       .style("opacity", 1); // Fade in
@@ -190,7 +189,7 @@ export default function PercentageChangeTable({
       .style("fill", "#fff")
       .style("opacity", 0) // Start invisible for animation
       .text((d) => d)
-      .transition() // Add animation
+      .transition()
       .duration(500)
       .delay((_, i) => i * 100)
       .style("opacity", 1); // Fade in
@@ -210,7 +209,7 @@ export default function PercentageChangeTable({
       .style("fill", "#fff")
       .style("opacity", 0) // Start invisible for animation
       .text((d) => d)
-      .transition() // Add animation
+      .transition()
       .duration(500)
       .delay((_, i) => i * 100)
       .style("opacity", 1); // Fade in

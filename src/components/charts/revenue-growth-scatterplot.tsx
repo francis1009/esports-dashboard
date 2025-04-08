@@ -58,13 +58,7 @@ export default function RevenueGrowthScatterPlot({
         .style("top", "-9999px");
     }
 
-    // ---------------------------
     // 1. Aggregate Data by Market
-    // ---------------------------
-    // For each market, compute:
-    // - avgRevenue: average revenue from revenueByMarketData
-    // - sumRevenue: sum of absolute revenue from revenueByMarketData (used for point size)
-    // - avgPctChange: average percentage change from revenueChangeData
     const markets = Array.from(
       new Set(revenueByMarketData.map((d) => d.market))
     );
@@ -77,9 +71,7 @@ export default function RevenueGrowthScatterPlot({
       return { market, avgRevenue, sumRevenue, avgPctChange };
     });
 
-    // ---------------------------
     // 2. Dimensions & SVG Container
-    // ---------------------------
     const margin = { top: 20, right: 200, bottom: 50, left: 70 };
     const width = 800 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
@@ -97,9 +89,7 @@ export default function RevenueGrowthScatterPlot({
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // ---------------------------
     // 3. Scales
-    // ---------------------------
     const xMax = d3.max(aggregated, (d) => d.avgRevenue) ?? 0;
     const xScale = d3.scaleLinear().domain([0, xMax]).range([0, width]).nice();
 
@@ -112,7 +102,6 @@ export default function RevenueGrowthScatterPlot({
       .nice();
 
     const rMax = d3.max(aggregated, (d) => d.sumRevenue) ?? 0;
-    // Use a smaller size range (adjust as needed).
     const rScale = d3.scaleSqrt().domain([0, rMax]).range([3, 10]);
 
     // Color scale using Tableau Classic Colors.
@@ -130,9 +119,7 @@ export default function RevenueGrowthScatterPlot({
       .domain(sortedMarkets)
       .range(tableauColors);
 
-    // ---------------------------
     // 4. Axes & Axis Labels
-    // ---------------------------
     // x-axis: Avg. Revenue. Tick labels: 500M, 1,000M, etc.
     const xAxis = d3
       .axisBottom(xScale)
@@ -147,10 +134,7 @@ export default function RevenueGrowthScatterPlot({
 
     xAxisGroup.call(xAxis);
 
-    xAxisGroup
-      .transition() // Add animation
-      .duration(800)
-      .style("opacity", 1); // Fade in
+    xAxisGroup.transition().duration(800).style("opacity", 1); // Fade in
 
     // y-axis: Avg. Percentage Change.
     const yAxis = d3
@@ -165,10 +149,7 @@ export default function RevenueGrowthScatterPlot({
 
     yAxisGroup.call(yAxis);
 
-    yAxisGroup
-      .transition() // Add animation
-      .duration(800)
-      .style("opacity", 1); // Fade in
+    yAxisGroup.transition().duration(800).style("opacity", 1); // Fade in
 
     // x-axis label.
     chartGroup
@@ -181,7 +162,7 @@ export default function RevenueGrowthScatterPlot({
       .style("font-size", "14px")
       .style("opacity", 0) // Start invisible for animation
       .text("Avg. Revenue")
-      .transition() // Add animation
+      .transition()
       .duration(800)
       .delay(800)
       .style("opacity", 1); // Fade in
@@ -198,14 +179,12 @@ export default function RevenueGrowthScatterPlot({
       .style("font-size", "14px")
       .style("opacity", 0) // Start invisible for animation
       .text("Avg. Percentage Change")
-      .transition() // Add animation
+      .transition()
       .duration(800)
       .delay(800)
       .style("opacity", 1); // Fade in
 
-    // ---------------------------
     // 5. Draw Scatter Points & Tooltip
-    // ---------------------------
     chartGroup
       .selectAll("circle")
       .data(aggregated)
@@ -248,15 +227,13 @@ export default function RevenueGrowthScatterPlot({
           .attr("opacity", 0.8);
         tooltip.style("opacity", 0);
       })
-      .transition() // Add animation
+      .transition()
       .duration(1000)
       .delay((_, i) => i * 100) // Stagger the animation
       .attr("r", (d) => rScale(d.sumRevenue)) // Grow to full size
       .attr("opacity", 0.8);
 
-    // ---------------------------
     // 6. Draw Color Legend (Top Right)
-    // ---------------------------
     const colorLegendGroup = svg
       .append("g")
       .attr("class", "color-legend")
@@ -295,9 +272,7 @@ export default function RevenueGrowthScatterPlot({
         .style("opacity", 1); // Fade in
     });
 
-    // ---------------------------
     // 7. Draw Size Legend (Below Color Legend)
-    // ---------------------------
     const sizeLegendGroup = svg
       .append("g")
       .attr("class", "size-legend")

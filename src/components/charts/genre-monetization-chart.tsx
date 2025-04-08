@@ -79,7 +79,6 @@ export default function GenreMonetizationChart({
       svg.append("g").attr("class", "legend");
     }
 
-    // --- DATA PREPARATION ---
     // 1) Join viewership records with general esports data.
     const joinedData = viewershipData
       .map((d) => {
@@ -106,7 +105,7 @@ export default function GenreMonetizationChart({
       genre,
       ...metrics,
     }));
-    // Optionally sort the data (here sorted alphabetically by genre)
+    // Sort the data alphabetically by genre)
     aggregatedData.sort((a, b) => a.genre.localeCompare(b.genre));
 
     // --- SCALES & AXES ---
@@ -160,7 +159,6 @@ export default function GenreMonetizationChart({
       .style("fill", "#fff");
 
     // --- UPDATE BARS WITH JOIN --
-    // Use a persistent group for the bars.
     const barsGroup = g.select("g.bars-group");
 
     // Bind aggregatedData to genre groups.
@@ -253,8 +251,6 @@ export default function GenreMonetizationChart({
     }
 
     // 11) Add mouse events to the bars to display the tooltip.
-    // Now the tooltip shows the genre in bold on the first line, then either:
-    //   "Avg. Hours Watched: <value>" or "Avg. Total Earnings: $<value>" in the next line.
     genreGroups
       .selectAll("rect")
       .on("mouseover", (event, d: any) => {

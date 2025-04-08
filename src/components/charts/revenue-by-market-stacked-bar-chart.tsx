@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import { ChartColumnStacked } from "lucide-react";
 
 interface RevenueByMarketData {
-  actualOrForecast: string; // "actual" or "forecast"
+  actualOrForecast: string;
   market: string;
   year: number;
   revenue: number;
@@ -20,7 +20,7 @@ interface RevenueByMarketStackedBarChartProps {
   revenueChangeData: RevenueChangeData[];
 }
 
-// Utility to truncate a string from the END if it's too long
+// Utility to truncate a string from the end if it's too long
 function truncateLabel(name: string, maxLen = 25) {
   if (name.length <= maxLen) return name;
   return name.slice(0, maxLen - 3) + "...";
@@ -66,7 +66,6 @@ export default function RevenueByMarketStackedBarChart({
     }
 
     // Define margins and overall dimensions.
-    // Increase right margin to squeeze the chart and make space for the legend.
     const margin = { top: 40, right: 100, bottom: 40, left: 80 };
     const overallWidth = 800;
     const overallHeight = 500;
@@ -74,12 +73,6 @@ export default function RevenueByMarketStackedBarChart({
     const chartHeight = overallHeight - margin.top - margin.bottom;
 
     // Pivot the revenue data by year.
-    // Create an object for each year that holds:
-    // • year (number)
-    // • yearType (actualOrForecast, assumed consistent across markets for that year)
-    // • Each market's revenue keyed by market name,
-    // • Extra keys for percentage change (e.g., `${market}-pct`) looked up from revenueChangeData,
-    // • A "total" revenue for that year.
     const dataByYearMap = d3.group(revenueByMarketData, (d) => d.year);
     const dataByYear = Array.from(dataByYearMap, ([year, entries]) => {
       const obj: any = { year: +year };
@@ -105,16 +98,12 @@ export default function RevenueByMarketStackedBarChart({
       new Set(revenueByMarketData.map((d) => d.market))
     );
     markets.sort((a, b) => a.localeCompare(b));
-    // For vertical stacking with the alphabetical order from top to bottom,
-    // we reverse the stacking order (since the first series is drawn at the bottom).
     const stackKeys = markets.slice();
     const stackGenerator = d3.stack().keys(stackKeys);
     stackGenerator.order(d3.stackOrderReverse);
     const series = stackGenerator(dataByYear);
 
     // Use Tableau Classic Colors for six segments.
-    // Tableau recommended palette for qualitative data:
-    // Blue, Orange, Red, Teal, Green, Yellow.
     const tableauColors = [
       "#4E79A7", // Blue
       "#F28E2B", // Orange
@@ -161,7 +150,6 @@ export default function RevenueByMarketStackedBarChart({
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
     // Draw a background rectangle per year to indicate forecast data.
-    // For vertical bars, draw a rect spanning xScale(year) and the full height of the bar.
     chartGroup
       .selectAll(".year-bg")
       .data(dataByYear)
@@ -177,18 +165,13 @@ export default function RevenueByMarketStackedBarChart({
       .style("stroke-dasharray", (d) =>
         d.yearType === "forecast" ? "4 2" : "0"
       )
-      .transition() // Add animation
+      .transition()
       .duration(800)
       .delay((d) => d.year * 100) // Delay by year
       .attr("y", (d) => yScale(d.total))
       .attr("height", (d) => chartHeight - yScale(d.total));
 
     // Draw the stacked segments.
-    // Vertical bars:
-    // • x: xScale(year)
-    // • width: xScale.bandwidth()
-    // • y: yScale(segment end)
-    // • height: yScale(segment start) - yScale(segment end)
     const seriesGroup = chartGroup
       .selectAll(".series")
       .data(series)
@@ -205,7 +188,6 @@ export default function RevenueByMarketStackedBarChart({
       .append("rect")
       .attr("x", (d) => xScale(d.data.year.toString())!)
       .attr("width", xScale.bandwidth())
-      // Set initial state for animation
       .attr("y", chartHeight)
       .attr("height", 0)
       .on("mouseover", function (_, d) {
@@ -253,7 +235,7 @@ export default function RevenueByMarketStackedBarChart({
       .attr("transform", `translate(0, ${chartHeight})`)
       .style("opacity", 0) // Start invisible for animation
       .call(xAxis)
-      .transition() // Add animation
+      .transition()
       .duration(800)
       .style("opacity", 1); // Fade in
 
@@ -269,7 +251,7 @@ export default function RevenueByMarketStackedBarChart({
       .attr("class", "y-axis")
       .style("opacity", 0) // Start invisible for animation
       .call(yAxis)
-      .transition() // Add animation
+      .transition()
       .duration(800)
       .style("opacity", 1); // Fade in
 
@@ -284,7 +266,7 @@ export default function RevenueByMarketStackedBarChart({
       .style("fill", "#fff")
       .style("opacity", 0) // Start invisible for animation
       .text("Revenue")
-      .transition() // Add animation
+      .transition()
       .duration(800)
       .delay(500)
       .style("opacity", 1); // Fade in
@@ -298,7 +280,7 @@ export default function RevenueByMarketStackedBarChart({
       .style("fill", "#fff")
       .style("opacity", 0) // Start invisible for animation
       .text("Year")
-      .transition() // Add animation
+      .transition()
       .duration(800)
       .delay(500)
       .style("opacity", 1); // Fade in
@@ -315,11 +297,11 @@ export default function RevenueByMarketStackedBarChart({
         .attr("x1", boundaryX)
         .attr("x2", boundaryX)
         .attr("y1", -30)
-        .attr("y2", -30) // Start with zero height for animation
+        .attr("y2", -30) // Start with -30 height for animation
         .attr("stroke", "#fff")
         .attr("stroke-width", 2)
         .attr("stroke-dasharray", "5,5")
-        .transition() // Add animation
+        .transition()
         .duration(1200)
         .delay(1500)
         .attr("y2", chartHeight); // Grow to full height
@@ -334,7 +316,7 @@ export default function RevenueByMarketStackedBarChart({
         .style("font-size", "14px")
         .style("opacity", 0) // Start invisible for animation
         .text("Actual")
-        .transition() // Add animation
+        .transition()
         .duration(800)
         .delay(2000)
         .style("opacity", 1); // Fade in
@@ -349,7 +331,7 @@ export default function RevenueByMarketStackedBarChart({
         .style("font-size", "14px")
         .style("opacity", 0) // Start invisible for animation
         .text("Forecast")
-        .transition() // Add animation
+        .transition()
         .duration(800)
         .delay(2000)
         .style("opacity", 1); // Fade in

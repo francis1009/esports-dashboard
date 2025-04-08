@@ -11,7 +11,7 @@ interface PeakViewersData {
 interface PeakViewersChartProps {
   topNGames: number;
   data: PeakViewersData[];
-  topGames?: string[]; // optional shared list from parent
+  topGames?: string[];
 }
 
 interface DataRow {
@@ -19,7 +19,7 @@ interface DataRow {
   [key: string]: number;
 }
 
-// Utility to truncate a string from the END if it's too long
+// Utility to truncate a string from the end if it's too long
 function truncateLabel(name: string, maxLen = 25) {
   if (name.length <= maxLen) return name;
   return name.slice(0, maxLen - 3) + "...";

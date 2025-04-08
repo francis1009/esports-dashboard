@@ -11,8 +11,8 @@ interface EngagementData {
 
 interface EngagementLevelsChartProps {
   topNGames: number;
-  data: EngagementData[]; // raw CSV rows
-  topGames?: string[]; // shared topGames array from parent
+  data: EngagementData[];
+  topGames?: string[];
 }
 
 const colorMap: Record<string, string> = {
@@ -39,9 +39,7 @@ export default function EngagementLevelsChart({
     // If no valid ref or no data, skip
     if (!chartRef.current || data.length === 0) return;
 
-    // --------------------------------------------------------
     // 1) Aggregate data by game (averages for each game)
-    // --------------------------------------------------------
     const aggregated = d3
       .rollups(
         data,
@@ -69,17 +67,13 @@ export default function EngagementLevelsChart({
     const topData = aggregated.filter((d) => finalTopGames.includes(d.game));
     if (topData.length === 0) return;
 
-    // --------------------------------------------------------
     // 2) Dimensions and margins
-    // --------------------------------------------------------
     const marginObj = { top: 20, right: 140, bottom: 40, left: 60 };
     const innerWidth =
       chartRef.current.clientWidth - marginObj.left - marginObj.right;
     const innerHeight = 400 - marginObj.top - marginObj.bottom;
 
-    // --------------------------------------------------------
     // 3) Create or select persistent <g> container
-    // --------------------------------------------------------
     const root = d3.select(chartRef.current);
 
     let svg = root.select<SVGGElement>("g.chart-content");
@@ -114,9 +108,7 @@ export default function EngagementLevelsChart({
         .attr("height", innerHeight + marginObj.top + marginObj.bottom);
     }
 
-    // --------------------------------------------------------
     // 4) Define scales
-    // --------------------------------------------------------
     const xMax = d3.max(topData, (d) => d.hoursStreamed) ?? 0;
     const yMax = d3.max(topData, (d) => d.hoursWatched) ?? 0;
     const rMax = d3.max(topData, (d) => d.avgViewers) ?? 0;
@@ -133,15 +125,11 @@ export default function EngagementLevelsChart({
       .nice();
     const rScale = d3.scaleSqrt().domain([0, rMax]).range([0, 15]);
 
-    // --------------------------------------------------------
     // 5) Compute overall averages for reference lines
-    // --------------------------------------------------------
     const avgStreamed = d3.mean(topData, (d) => d.hoursStreamed) ?? 0;
     const avgWatched = d3.mean(topData, (d) => d.hoursWatched) ?? 0;
 
-    // --------------------------------------------------------
     // 6) Tooltip (create once if not already present)
-    // --------------------------------------------------------
     let tooltip = d3.select<HTMLDivElement, unknown>(".engagement-tooltip");
     if (tooltip.empty()) {
       tooltip = d3
@@ -160,9 +148,7 @@ export default function EngagementLevelsChart({
         .style("opacity", 0);
     }
 
-    // --------------------------------------------------------
     // 7) Update average lines (with transitions)
-    // --------------------------------------------------------
     const avgLinesGroup = svg.select<SVGGElement>("g.avg-lines-group");
 
     // Horizontal line (avgWatched)
@@ -299,9 +285,7 @@ export default function EngagementLevelsChart({
         tooltip.style("opacity", 0);
       });
 
-    // --------------------------------------------------------
     // 8) Circles (bubbles) - Enter/Update/Exit
-    // --------------------------------------------------------
     const circlesGroup = svg.select<SVGGElement>("g.circles-group");
 
     // Bind data with a key function: each circle is identified by the game name
@@ -371,9 +355,7 @@ export default function EngagementLevelsChart({
     // EXIT
     circleSelection.exit().transition().duration(750).attr("r", 0).remove();
 
-    // --------------------------------------------------------
     // 9) Labels - Enter/Update/Exit
-    // --------------------------------------------------------
     const labelsGroup = svg.select<SVGGElement>("g.labels-group");
     const labelSelection = labelsGroup
       .selectAll<SVGTextElement, (typeof topData)[0]>("text.game-label")
@@ -412,9 +394,7 @@ export default function EngagementLevelsChart({
       .attr("opacity", 0)
       .remove();
 
-    // --------------------------------------------------------
     // 10) Axes
-    // --------------------------------------------------------
     const xAxisGroup = svg
       .select<SVGGElement>("g.x-axis")
       .attr("transform", `translate(0, ${innerHeight})`);
@@ -453,9 +433,7 @@ export default function EngagementLevelsChart({
         .text("Avg. Hours Watched");
     }
 
-    // --------------------------------------------------------
     // 11) Size legend (persistent)
-    // --------------------------------------------------------
     const sizeLegendG = svg
       .select<SVGGElement>("g.size-legend")
       .attr("transform", `translate(${innerWidth + 20}, 0)`);
