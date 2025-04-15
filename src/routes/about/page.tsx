@@ -103,12 +103,12 @@ const About: React.FC = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                name: "Daryl Teo Jun Wei",
-                email: "daryl.teo.2021@scis.smu.edu.sg",
+                name: "Francis Gabriel Manalo Valdez",
+                email: "francism56789@gmail.com",
               },
               {
-                name: "Francis Gabriel Manalo Valdez",
-                email: "fvaldez.2021@scis.smu.edu.sg",
+                name: "Daryl Teo Jun Wei",
+                email: "daryl.teo.2021@scis.smu.edu.sg",
               },
               {
                 name: "Kenneth Lim Hu Gui",
